@@ -3,3 +3,21 @@ server:
 spring:
   application:
     name: mic-corporateorganization
+
+  datasource:
+    url: jdbc:sqlserver://your-server-name.database.windows.net:1433;database=your_database;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: your_username@your-server-name
+    password: your_password
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
