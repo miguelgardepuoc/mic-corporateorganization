@@ -17,9 +17,8 @@
     <packaging>pom</packaging>
 
     <name>mic-corporateorganization</name>
-    <description>Java-based microservice designed to facilitate seamless integrations with artificial intelligence
-        systems. It provides APIs to interact with AI models. It is built with scalability and security in mind,
-        leveraging modern frameworks like Spring Boot to handle requests efficiently and ensure robust performance.
+    <description>Java-based microservice that manages the creation, updating, and retrieval of company employees,
+        their user accounts, and departments, ensuring seamless integration and efficient data handling.
     </description>
 
     <modules>
@@ -31,6 +30,23 @@
 
     <properties>
         <java.version>21</java.version>
+
+        <!-- Dependencies -->
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <lombok.version>1.18.38</lombok.version>
+        <postgresql.version>42.7.5</postgresql.version>
+        <archunit.junit5.version>1.4.0</archunit.junit5.version>
+        <qpid.jms.client.version>2.7.0</qpid.jms.client.version>
+        <artemis.jms.client.version>2.31.0</artemis.jms.client.version>
+        <spring.security.core.version>5.6.0</spring.security.core.version>
+
+        <!-- Plugins -->
+        <maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
+        <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
+        <maven.puppycrawl.version>10.21.4</maven.puppycrawl.version>
+        <jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
+        <spotless.maven.plugin.version>2.44.3</spotless.maven.plugin.version>
+        <google.java.format.version>1.26.0</google.java.format.version>
     </properties>
 
     <dependencies>
@@ -66,7 +82,37 @@
             <dependency>
                 <groupId>com.tngtech.archunit</groupId>
                 <artifactId>archunit-junit5</artifactId>
-                <version>1.4.0</version>
+                <version>${archunit.junit5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-jms-client</artifactId>
+                <version>${qpid.jms.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-jms-client</artifactId>
+                <version>${artemis.jms.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${spring.security.core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -77,24 +123,33 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
+                    <source>21</source>
+                    <target>21</target>
                     <annotationProcessorPaths>
-                        <path>
+                        <annotationProcessorPath>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </annotationProcessorPath>
+                        <annotationProcessorPath>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                        </path>
+                            <version>${lombok.version}</version>
+                        </annotationProcessorPath>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.44.3</version>
+                <version>${spotless.maven.plugin.version}</version>
                 <configuration>
                     <java>
                         <googleJavaFormat>
                             <!-- Latest version can be found here: https://github.com/google/google-java-format/releases -->
-                            <version>1.26.0</version>
+                            <version>${google.java.format.version}</version>
                             <style>GOOGLE</style>
                         </googleJavaFormat>
                         <lineEndings>UNIX</lineEndings>
@@ -122,7 +177,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.12</version>
+                        <version>${jacoco.maven.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -147,7 +202,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.6.0</version>
+                        <version>${maven.checkstyle.plugin.version}</version>
                         <configuration>
                             <configLocation>./google_checks.xml</configLocation>
                         </configuration>
@@ -155,7 +210,7 @@
                             <dependency>
                                 <groupId>com.puppycrawl.tools</groupId>
                                 <artifactId>checkstyle</artifactId>
-                                <version>10.21.4</version>
+                                <version>${maven.puppycrawl.version}</version>
                             </dependency>
                         </dependencies>
                         <executions>

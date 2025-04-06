@@ -1,0 +1,15 @@
+package com.antharos.corporateorganization.domain.user.repository;
+
+import com.antharos.corporateorganization.domain.user.User;
+import com.antharos.corporateorganization.domain.user.UserId;
+import java.util.Optional;
+
+public interface UserRepository {
+  Optional<User> findBy(UserId userId);
+
+  void save(User user);
+
+  boolean usernameExists(String username);
+
+  boolean existsByEmployeeNumber(Long employeeNumber);
+}
