@@ -33,7 +33,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
     final LoginCommand command =
         LoginCommand.builder()
             .username(request.getUsername())

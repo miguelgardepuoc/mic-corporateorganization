@@ -3,14 +3,12 @@ package com.antharos.corporateorganization.infrastructure.repository.user;
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.user.*;
-import java.util.UUID;
-
 import com.antharos.corporateorganization.infrastructure.repository.department.DepartmentEntityMapper;
 import com.antharos.corporateorganization.infrastructure.repository.jobtitle.JobTitleEntityMapper;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 
-@Mapper(
-    componentModel = "spring")
+@Mapper(componentModel = "spring")
 public interface UserEntityMapper {
 
   default User toDomain(UserEntity entity) {
@@ -37,7 +35,10 @@ public interface UserEntityMapper {
         .build();
   }
 
-  default UserEntity toEntity(User domain, DepartmentEntityMapper departmentEntityMapper, JobTitleEntityMapper jobTitleEntityMapper) {
+  default UserEntity toEntity(
+      User domain,
+      DepartmentEntityMapper departmentEntityMapper,
+      JobTitleEntityMapper jobTitleEntityMapper) {
     UserEntity entity = new UserEntity();
     entity.setId(UUID.fromString(domain.getId().getValueAsString()));
     entity.setEmployeeNumber(domain.getEmployeeNumber());
@@ -60,5 +61,4 @@ public interface UserEntityMapper {
     entity.setJobTitle(jobTitleEntityMapper.toEntity(domain.getJobTitle()));
     return entity;
   }
-
 }
