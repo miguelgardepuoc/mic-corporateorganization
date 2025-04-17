@@ -1,8 +1,10 @@
 package com.antharos.corporateorganization.domain.jobtitle;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface JobTitleRepository {
-  Optional<JobTitle> findBy(JobTitleId jobTitleId);
+  List<JobTitle> findAll();
 
+  Optional<JobTitle> findBy(JobTitleId jobTitleId);
 }

@@ -23,6 +23,9 @@ public class JobTitleEntity {
   private String description;
 
   @Column(nullable = false)
+  private String photoUrl;
+
+  @Column(nullable = false)
   private String createdBy;
 
   @Temporal(TemporalType.TIMESTAMP)

@@ -1,7 +1,7 @@
 package com.antharos.corporateorganization.domain.user;
 
 public enum Status {
-  ACTIVO,
+  ACTIVE,
   DE_BAJA,
   DESPEDIDO,
   INACTIVO

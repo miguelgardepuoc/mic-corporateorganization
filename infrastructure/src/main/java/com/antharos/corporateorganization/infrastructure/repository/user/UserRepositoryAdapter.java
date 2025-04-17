@@ -27,6 +27,11 @@ public class UserRepositoryAdapter implements UserRepository {
   }
 
   @Override
+  public Optional<User> findByUsername(String username) {
+    return this.userJpaRepository.findByUsername(username).map(this.mapper::toDomain);
+  }
+
+  @Override
   public void save(User user) {
     this.userJpaRepository.save(
         this.mapper.toEntity(user, this.departmentEntityMapper, this.jobTitleEntityMapper));
@@ -40,5 +45,10 @@ public class UserRepositoryAdapter implements UserRepository {
   @Override
   public boolean existsByEmployeeNumber(Long employeeNumber) {
     return this.userJpaRepository.existsByEmployeeNumber(employeeNumber);
+  }
+
+  @Override
+  public Optional<User> findTopByOrderByEmployeeNumberDesc() {
+    return Optional.empty();
   }
 }

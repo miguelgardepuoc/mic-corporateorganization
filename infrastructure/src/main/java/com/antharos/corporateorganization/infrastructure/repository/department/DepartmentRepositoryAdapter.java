@@ -21,5 +21,4 @@ public class DepartmentRepositoryAdapter implements DepartmentRepository {
         .findById(UUID.fromString(departmentId.getValueAsString()))
         .map(this.mapper::toDomain);
   }
-
 }

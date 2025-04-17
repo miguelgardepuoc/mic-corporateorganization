@@ -4,5 +4,4 @@ import java.util.Optional;
 
 public interface DepartmentRepository {
   Optional<Department> findBy(DepartmentId departmentId);
-
 }

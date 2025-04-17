@@ -7,9 +7,13 @@ import java.util.Optional;
 public interface UserRepository {
   Optional<User> findBy(UserId userId);
 
+  Optional<User> findByUsername(String username);
+
   void save(User user);
 
   boolean usernameExists(String username);
 
   boolean existsByEmployeeNumber(Long employeeNumber);
+
+  Optional<User> findTopByOrderByEmployeeNumberDesc();
 }

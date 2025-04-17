@@ -50,7 +50,13 @@ public class HireEmployeeCommandHandler {
             .findBy(jobTitleId)
             .orElseThrow(() -> new JobTitleNotFoundException(command.getJobTitleId()));
 
-    final Dni dni = new Dni(command.getDni());
+    final Long lastEmployeeNumber =
+        this.userRepository
+            .findTopByOrderByEmployeeNumberDesc()
+            .map(User::getEmployeeNumber)
+            .orElse(0L);
+
+    final Long newEmployeeNumber = lastEmployeeNumber + 1;
     final Name name = new Name(command.getName());
     final Surname surname = new Surname(command.getSurname());
     final TelephoneNumber telephoneNumber = new TelephoneNumber(command.getTelephoneNumber());
@@ -60,7 +66,8 @@ public class HireEmployeeCommandHandler {
     final User user =
         User.create(
             userId,
-            dni,
+            newEmployeeNumber,
+            Dni.of(command.getDni()),
             name,
             surname,
             telephoneNumber,

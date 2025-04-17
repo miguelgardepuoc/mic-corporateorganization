@@ -15,6 +15,8 @@ public class JobTitle {
 
   private String description;
 
+  private String photoUrl;
+
   private String createdBy;
 
   private Date createdAt;

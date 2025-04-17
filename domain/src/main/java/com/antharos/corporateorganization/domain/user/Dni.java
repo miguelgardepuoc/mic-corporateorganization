@@ -1,12 +1,21 @@
 package com.antharos.corporateorganization.domain.user;
 
 import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-public record Dni(String value) {
-  public Dni {
-    Objects.requireNonNull(value, "DNI cannot be null");
-    if (!value.matches("\\d{8}[A-Za-z]")) {
+@Value
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class Dni {
+
+  String valueAsString;
+
+  public static Dni of(String dni) {
+    Objects.requireNonNull(dni, "DNI cannot be null");
+    if (!dni.matches("\\d{8}[A-Za-z]")) {
       throw new IllegalArgumentException("Invalid DNI format");
     }
+    return new Dni(dni);
   }
 }

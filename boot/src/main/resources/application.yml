@@ -1,11 +1,13 @@
 server:
-  port: 8080
+  port: 8086
 spring:
   application:
     name: mic-corporateorganization
-
+  mvc:
+    servlet:
+      path: /corporate-organization
   datasource:
-    url: jdbc:postgresql://localhost:5432/CORPORATE_ORGANIZATION
+    url: jdbc:postgresql://localhost:55432/CORPORATE_ORGANIZATION
     username: myuser
     password: mypassword
     driver-class-name: org.postgresql.Driver
@@ -20,7 +22,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    #show-sql: true
     format_sql: true
     properties:
       hibernate:
@@ -33,8 +35,13 @@ spring:
 producer:
   event:
     host: ${PRODUCER_ARTEMIS_HOST:localhost}
-    port: ${PRODUCER_ARTEMIS_PORT:61616}
+    port: ${PRODUCER_ARTEMIS_PORT:6616}
     user: ${PRODUCER_ARTEMIS_USER:admin}
     password: ${PRODUCER_ARTEMIS_PASSWORD:admin}
   topic:
     name: ${PRODUCER_TOPIC_NAME:test-topic}
+
+security:
+  jwt:
+    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+    expiration-time: 3600000 # 1h in millisecond

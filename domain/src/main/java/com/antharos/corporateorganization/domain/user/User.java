@@ -3,16 +3,19 @@ package com.antharos.corporateorganization.domain.user;
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.user.repository.UserRepository;
-import java.security.SecureRandom;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User {
+public class User implements UserDetails {
 
   private final UserId id;
 
@@ -55,6 +58,50 @@ public class User {
   @Builder
   public User(
       UserId id,
+      Long employeeNumber,
+      Dni dni,
+      String username,
+      String password,
+      Name name,
+      Surname surname,
+      TelephoneNumber telephoneNumber,
+      String corporateEmail,
+      Status status,
+      Department department,
+      Salary salary,
+      HiringDate hiringDate,
+      Role role,
+      JobTitle jobTitle,
+      String createdBy,
+      Date createdAt,
+      String lastModifiedBy,
+      Date lastModifiedAt) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+    this.employeeNumber = employeeNumber;
+    this.dni = dni;
+    this.name = name;
+    this.surname = surname;
+    this.telephoneNumber = telephoneNumber;
+    this.corporateEmail = corporateEmail;
+    this.department = department;
+    this.salary = salary;
+    this.hiringDate = hiringDate;
+    this.role = role;
+    this.status = status;
+    this.jobTitle = jobTitle;
+    this.createdBy = createdBy;
+    this.createdAt = createdAt;
+    this.lastModifiedBy = lastModifiedBy;
+    this.lastModifiedAt = lastModifiedAt;
+  }
+
+  @Builder
+  public User(
+      UserId id,
+      Long employeeNumber,
+      String username,
       Dni dni,
       Name name,
       Surname surname,
@@ -64,8 +111,16 @@ public class User {
       HiringDate hiringDate,
       Role role,
       JobTitle jobTitle,
-      String createdBy) {
+      String password,
+      String corporateEmail,
+      Status status,
+      String createdBy,
+      Date createdAt,
+      String lastModifiedBy,
+      Date lastModifiedAt) {
     this.id = id;
+    this.employeeNumber = employeeNumber;
+    this.username = username;
     this.dni = dni;
     this.name = name;
     this.surname = surname;
@@ -75,7 +130,13 @@ public class User {
     this.hiringDate = hiringDate;
     this.role = role;
     this.jobTitle = jobTitle;
+    this.password = password;
+    this.corporateEmail = corporateEmail;
+    this.status = status;
     this.createdBy = createdBy;
+    this.createdAt = createdAt;
+    this.lastModifiedBy = lastModifiedBy;
+    this.lastModifiedAt = lastModifiedAt;
   }
 
   public User(UserId id) {
@@ -84,6 +145,7 @@ public class User {
 
   public static User create(
       UserId userId,
+      Long employeeNumber,
       Dni dni,
       Name name,
       Surname surname,
@@ -99,27 +161,33 @@ public class User {
     User u =
         new User(
             userId,
+            employeeNumber,
             dni,
+            null,
+            null,
             name,
             surname,
             telephoneNumber,
+            null,
+            Status.ACTIVE,
             department,
             salary,
             hiringDate,
             role,
             jobTitle,
-            createdBy);
+            createdBy,
+            null,
+            null,
+            null);
 
-    u.generateUsername(userRepository);
-    u.generateRandomPassword();
-    u.generateUniqueEmployeeNumber(userRepository);
+    u.username = u.generateUsername(userRepository);
     u.corporateEmail = u.username + "@antharos.com";
-    u.status = Status.ACTIVO;
+    u.status = Status.ACTIVE;
 
     return u;
   }
 
-  private void generateUsername(UserRepository userRepository) {
+  private String generateUsername(UserRepository userRepository) {
     String baseUsername = (this.name.value().charAt(0) + this.surname.value()).toLowerCase();
 
     if (userRepository.usernameExists(baseUsername)) {
@@ -127,30 +195,40 @@ public class User {
       baseUsername = baseUsername + random.nextInt(10000);
     }
 
-    this.username = baseUsername;
+    return baseUsername;
   }
 
-  private void generateRandomPassword() {
-    final String CHARACTERS =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?";
-
-    SecureRandom random = new SecureRandom();
-    StringBuilder password = new StringBuilder();
-
-    for (int i = 0; i < 10; i++) {
-      int index = random.nextInt(CHARACTERS.length());
-      password.append(CHARACTERS.charAt(index));
-    }
-
-    this.password = password.toString();
+  public void signup(String password) {
+    this.password = password;
   }
 
-  private void generateUniqueEmployeeNumber(UserRepository userRepository) {
-    final Random random = new Random();
-    long employeeNumber;
-    do {
-      employeeNumber = 1000 + random.nextInt(9000);
-    } while (userRepository.existsByEmployeeNumber(employeeNumber));
-    this.employeeNumber = employeeNumber;
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of();
+  }
+
+  @Override
+  public String getUsername() {
+    return username;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

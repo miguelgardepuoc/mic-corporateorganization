@@ -10,6 +10,7 @@ public interface JobTitleEntityMapper {
     return new JobTitle(
         entity.getId(),
         entity.getDescription(),
+        entity.getPhotoUrl(),
         entity.getCreatedBy(),
         entity.getCreatedAt(),
         entity.getLastModifiedBy(),
@@ -20,6 +21,8 @@ public interface JobTitleEntityMapper {
     final JobTitleEntity entity = new JobTitleEntity();
 
     entity.setId(domain.getId());
+    entity.setDescription(domain.getDescription());
+    entity.setPhotoUrl(domain.getPhotoUrl());
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAt());
     entity.setLastModifiedBy(domain.getLastModifiedBy());
