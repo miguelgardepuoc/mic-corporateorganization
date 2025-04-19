@@ -1,6 +1,7 @@
 package com.antharos.corporateorganization.infrastructure.repository.user;
 
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.user.*;
 import com.antharos.corporateorganization.infrastructure.repository.department.DepartmentEntityMapper;
@@ -20,7 +21,7 @@ public interface UserEntityMapper {
         .name(new Name(entity.getName()))
         .surname(new Surname(entity.getSurname()))
         .telephoneNumber(new TelephoneNumber(entity.getTelephoneNumber()))
-        .department(new Department(entity.getDepartment().getId()))
+        .department(new Department(DepartmentId.of(entity.getDepartment().getId().toString())))
         .salary(new Salary(entity.getSalary()))
         .hiringDate(new HiringDate(entity.getHiringDate()))
         .role(entity.getRole())

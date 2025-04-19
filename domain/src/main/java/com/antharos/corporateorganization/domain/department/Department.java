@@ -3,7 +3,6 @@ package com.antharos.corporateorganization.domain.department;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.user.User;
 import java.util.Date;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import lombok.Getter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 public class Department {
-  private UUID id;
+  private DepartmentId id;
 
   private String description;
 
@@ -28,8 +27,20 @@ public class Department {
 
   private Date lastModifiedAt;
 
-  public Department(UUID id) {
+  public Department(DepartmentId id) {
     this.id = id;
+  }
+
+  public Department(DepartmentId id, String description, boolean isActive, Date createdAt, String createdBy) {
+    this.id = id;
+    this.description = description;
+    this.isActive = isActive;
+    this.createdAt = createdAt;
+    this.createdBy = createdBy;
+  }
+
+  public static Department create(DepartmentId id, String description, String createdBy) {
+    return new Department(id, description, true, new Date(), createdBy);
   }
 
   public void rename(String description, String user) {

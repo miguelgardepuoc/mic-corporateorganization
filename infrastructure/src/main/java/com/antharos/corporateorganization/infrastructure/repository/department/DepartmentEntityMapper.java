@@ -1,8 +1,10 @@
 package com.antharos.corporateorganization.infrastructure.repository.department;
 
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.user.User;
 import com.antharos.corporateorganization.domain.user.UserId;
+import java.util.UUID;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -10,7 +12,7 @@ public interface DepartmentEntityMapper {
   default Department toDomain(final DepartmentEntity entity) {
 
     return new Department(
-        entity.getId(),
+        DepartmentId.of(entity.getId().toString()),
         entity.getDescription(),
         entity.getDepartmentHead() != null
             ? new User(UserId.of(entity.getDepartmentHead().getId().toString()))
@@ -25,7 +27,7 @@ public interface DepartmentEntityMapper {
   default DepartmentEntity toEntity(final Department domain) {
     final DepartmentEntity entity = new DepartmentEntity();
 
-    entity.setId(domain.getId());
+    entity.setId(UUID.fromString(domain.getId().getValueAsString()));
     entity.setDescription(domain.getDescription());
     entity.setActive(domain.isActive());
     entity.setCreatedBy(domain.getCreatedBy());
