@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel;
+package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.jobtitle;
 
 import java.util.UUID;
 

@@ -15,6 +15,7 @@ public interface DepartmentEntityMapper {
         entity.getDepartmentHead() != null
             ? new User(UserId.of(entity.getDepartmentHead().getId().toString()))
             : null,
+        entity.isActive(),
         entity.getCreatedBy(),
         entity.getCreatedAt(),
         entity.getLastModifiedBy(),
@@ -25,6 +26,8 @@ public interface DepartmentEntityMapper {
     final DepartmentEntity entity = new DepartmentEntity();
 
     entity.setId(domain.getId());
+    entity.setDescription(domain.getDescription());
+    entity.setActive(domain.isActive());
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAt());
     entity.setLastModifiedBy(domain.getLastModifiedBy());

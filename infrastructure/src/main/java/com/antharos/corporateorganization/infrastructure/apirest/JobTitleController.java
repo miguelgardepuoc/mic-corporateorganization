@@ -2,8 +2,8 @@ package com.antharos.corporateorganization.infrastructure.apirest;
 
 import com.antharos.corporateorganization.application.find.FindJobTitlesQuery;
 import com.antharos.corporateorganization.application.find.FindJobTitlesQueryHandler;
-import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.JobTitleMapper;
-import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.JobTitleResponse;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.jobtitle.JobTitleMapper;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.jobtitle.JobTitleResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

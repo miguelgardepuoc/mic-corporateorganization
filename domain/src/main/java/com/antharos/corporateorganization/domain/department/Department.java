@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.domain.department;
 
+import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.user.User;
 import java.util.Date;
 import java.util.UUID;
@@ -17,6 +18,8 @@ public class Department {
 
   private User departmentHead;
 
+  private boolean isActive;
+
   private String createdBy;
 
   private Date createdAt;
@@ -27,5 +30,27 @@ public class Department {
 
   public Department(UUID id) {
     this.id = id;
+  }
+
+  public void rename(String description, String user) {
+    if (!isActive()) {
+      throw new ConflictException();
+    }
+    this.description = description;
+    this.lastModifiedAt = new Date();
+    this.lastModifiedBy = user;
+  }
+
+  public void remove(String user) {
+    if (!isActive()) {
+      throw new ConflictException();
+    }
+    this.isActive = false;
+    this.lastModifiedAt = new Date();
+    this.lastModifiedBy = user;
+  }
+
+  public boolean isActive() {
+    return isActive;
   }
 }

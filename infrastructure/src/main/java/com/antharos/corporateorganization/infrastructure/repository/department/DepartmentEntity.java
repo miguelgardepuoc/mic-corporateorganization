@@ -27,6 +27,9 @@ public class DepartmentEntity {
   @JoinColumn(name = "department_head_id")
   private UserEntity departmentHead;
 
+  @Column(name = "is_active", nullable = false)
+  private boolean isActive;
+
   @Column(nullable = false)
   private String createdBy;
 

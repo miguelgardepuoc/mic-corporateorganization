@@ -3,6 +3,7 @@ CREATE TABLE "department" (
     "id" uuid NOT NULL,
     "description" varchar NOT NULL,
     "department_head_id" uuid,
+    "is_active" boolean NOT NULL,
     "created_by" varchar NOT NULL,
     "created_at" date NOT NULL,
     "last_modified_by" varchar,
@@ -22,9 +23,9 @@ CREATE TABLE "job_title" (
 );
 
 -- Crear el tipo ENUM para el campo "role"
-CREATE TYPE role_enum AS ENUM ('DIRECCION_DE_LA_EMPRESA', 'RESPONSABLE_DE_DEPARTAMENTO', 'EMPLEADO');
+CREATE TYPE role_enum AS ENUM ('DIRECCION_DE_LA_EMPRESA', 'RESPONSABLE_DE_DEPARTAMENTO', 'EMPLOYEE');
 
-CREATE TYPE status_enum AS ENUM ('ACTIVO', 'DE_BAJA', 'INACTIVO', 'DESPEDIDO');
+CREATE TYPE status_enum AS ENUM ('ACTIVE', 'DE_BAJA', 'INACTIVO', 'DESPEDIDO');
 
 CREATE TABLE "user" (
     "id" uuid NOT NULL,
@@ -34,7 +35,7 @@ CREATE TABLE "user" (
     "role" role_enum NOT NULL,
     "telephone_number" bigint NOT NULL,
     "username" varchar NOT NULL,
-    "password" varchar NOT NULL,
+    "password" varchar,
     "employee_number" bigint NOT NULL,
     "department_id" uuid NOT NULL,
     "corporate_email" varchar NOT NULL,
@@ -62,15 +63,16 @@ INSERT INTO "department" (
     "id",
     "description",
     "department_head_id",
+    "is_active",
     "created_by",
     "created_at",
     "last_modified_by",
     "last_modified_at"
 ) VALUES
-('a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'IT Department', NULL, 'system', CURRENT_DATE, NULL, NULL),
-('db978bbe-a875-4368-a58a-3a864d3af8ec', 'Human Resources', NULL, 'system', CURRENT_DATE, NULL, NULL),
-('2bc45806-1fc2-47f5-a39a-2d60f399f47a', 'Finance', NULL, 'system', CURRENT_DATE, NULL, NULL),
-('3bcc77b4-13c3-4f73-9627-0c27ab3ffe8d', 'Marketing', NULL, 'system', CURRENT_DATE, NULL, NULL);
+('a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'IT Department', NULL, true, 'system', CURRENT_DATE, NULL, NULL),
+('db978bbe-a875-4368-a58a-3a864d3af8ec', 'Human Resources', NULL, true,'system', CURRENT_DATE, NULL, NULL),
+('2bc45806-1fc2-47f5-a39a-2d60f399f47a', 'Finance', NULL, true,'system', CURRENT_DATE, NULL, NULL),
+('3bcc77b4-13c3-4f73-9627-0c27ab3ffe8d', 'Marketing', NULL, true,'system', CURRENT_DATE, NULL, NULL);
 
 INSERT INTO "job_title" ("id", "description", "photo_url", "created_by", "created_at", "last_modified_by", "last_modified_at")
 VALUES
@@ -83,3 +85,8 @@ VALUES
     ('3c01ef99-9c73-4bac-a27f-24dc5089df16', 'Platform Engineer', 'https://imgur.com/hpsyVvQ.jpeg', 'admin', CURRENT_DATE, null, null),
     ('23f8785e-efce-48fc-9dcd-0141ea777fed', 'Senior Machine Learning Engineer', 'https://imgur.com/5YxqZpG.jpeg', 'admin', CURRENT_DATE, null, null),
     ('e513050a-a90a-4d3c-b820-113b9e098e52', 'Tech Lead', 'https://imgur.com/OyA5NC4.jpeg', 'admin', CURRENT_DATE, null, null);
+
+INSERT INTO public."user"
+(id, dni, "name", surname, "role", telephone_number, username, employee_number, department_id, corporate_email, salary, hiring_date, status, job_title_id, created_by, created_at)
+VALUES
+('e5453fe0-b434-409d-ba9d-b96eb7f22a68', '12345678A', 'John', 'Doe', 'EMPLOYEE'::role_enum, 6653093811, 'jperez', 1, 'a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'john.doe@company.com', 50000, '2023-06-01', 'ACTIVE'::status_enum, 'd8f90d3f-b6a9-4c45-9f4f-951f1d1b9571', 'admin', '2023-06-01 10:00:00');
