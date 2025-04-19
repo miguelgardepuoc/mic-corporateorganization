@@ -31,7 +31,8 @@ public class Department {
     this.id = id;
   }
 
-  public Department(DepartmentId id, String description, boolean isActive, Date createdAt, String createdBy) {
+  public Department(
+      DepartmentId id, String description, boolean isActive, Date createdAt, String createdBy) {
     this.id = id;
     this.description = description;
     this.isActive = isActive;

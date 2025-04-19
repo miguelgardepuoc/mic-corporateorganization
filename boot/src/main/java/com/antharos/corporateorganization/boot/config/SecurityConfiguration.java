@@ -37,7 +37,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(
             request ->
                 request
-                    .requestMatchers("/auth/**", "/job-titles")
+                    .requestMatchers("/auth/**", "/job-titles", "/v3/api-docs")
                     .permitAll()
                     .anyRequest()
                     .authenticated());

@@ -1,6 +1,6 @@
 package com.antharos.corporateorganization.boot.config;
 
-import com.antharos.corporateorganization.application.JwtService;
+import com.antharos.corporateorganization.infrastructure.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
