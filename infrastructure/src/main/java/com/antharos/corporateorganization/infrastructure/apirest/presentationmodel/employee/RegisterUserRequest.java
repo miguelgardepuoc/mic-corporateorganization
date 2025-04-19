@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel;
+package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee;
 
 import lombok.Getter;
 import lombok.Setter;

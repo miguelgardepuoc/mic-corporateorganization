@@ -2,12 +2,18 @@ package com.antharos.corporateorganization.infrastructure.apirest;
 
 import com.antharos.corporateorganization.application.create.HireEmployeeCommand;
 import com.antharos.corporateorganization.application.create.HireEmployeeCommandHandler;
+import com.antharos.corporateorganization.application.find.FindEmployeesQuery;
+import com.antharos.corporateorganization.application.find.FindEmployeesQueryHandler;
 import com.antharos.corporateorganization.domain.user.User;
-import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.UserDTO;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee.EmployeeMapper;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee.EmployeeResponse;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
@@ -15,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
 
   private final HireEmployeeCommandHandler hireEmployeeCommandHandler;
+  private final FindEmployeesQueryHandler findEmployeesQueryHandler;
+
+  private final EmployeeMapper employeeMapper;
 
   @PostMapping("/hiring")
   public ResponseEntity<User> hireEmployee(@RequestBody UserDTO request) {
@@ -35,5 +44,12 @@ public class EmployeeController {
 
     this.hireEmployeeCommandHandler.doHandle(command);
     return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+
+  @GetMapping
+  public ResponseEntity<List<EmployeeResponse>> findEmployees() {
+    return ResponseEntity.ok(
+            this.employeeMapper.toEmployeeResponse(
+                    this.findEmployeesQueryHandler.handle(FindEmployeesQuery.of()).stream().toList()));
   }
 }

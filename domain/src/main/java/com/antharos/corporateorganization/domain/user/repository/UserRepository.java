@@ -2,6 +2,8 @@ package com.antharos.corporateorganization.domain.user.repository;
 
 import com.antharos.corporateorganization.domain.user.User;
 import com.antharos.corporateorganization.domain.user.UserId;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -16,4 +18,6 @@ public interface UserRepository {
   boolean existsByEmployeeNumber(Long employeeNumber);
 
   Optional<User> findTopByOrderByEmployeeNumberDesc();
+
+    List<User> findAll();
 }

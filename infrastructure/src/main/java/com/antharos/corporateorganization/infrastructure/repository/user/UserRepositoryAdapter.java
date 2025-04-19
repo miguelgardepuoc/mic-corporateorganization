@@ -5,6 +5,8 @@ import com.antharos.corporateorganization.domain.user.UserId;
 import com.antharos.corporateorganization.domain.user.repository.UserRepository;
 import com.antharos.corporateorganization.infrastructure.repository.department.DepartmentEntityMapper;
 import com.antharos.corporateorganization.infrastructure.repository.jobtitle.JobTitleEntityMapper;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,11 @@ public class UserRepositoryAdapter implements UserRepository {
 
   @Override
   public Optional<User> findTopByOrderByEmployeeNumberDesc() {
-    return Optional.empty();
+    return this.userJpaRepository.findTopByOrderByEmployeeNumberDesc().map(this.mapper::toDomain);
+  }
+
+  @Override
+  public List<User> findAll() {
+    return this.userJpaRepository.findAll().stream().map(this.mapper::toDomain).toList();
   }
 }

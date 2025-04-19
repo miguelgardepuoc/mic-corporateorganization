@@ -4,7 +4,7 @@ import com.antharos.corporateorganization.application.*;
 import com.antharos.corporateorganization.domain.user.User;
 import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.LoginRequest;
 import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.LoginResponse;
-import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.RegisterUserRequest;
+import com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee.RegisterUserRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

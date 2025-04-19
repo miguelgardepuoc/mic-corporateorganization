@@ -188,7 +188,9 @@ public class User implements UserDetails {
   }
 
   private String generateUsername(UserRepository userRepository) {
-    String baseUsername = (this.name.value().charAt(0) + this.surname.value()).toLowerCase();
+    String nameInitial = this.name.value().trim().replaceAll("\\s+", "").substring(0, 1);
+    String cleanSurname = this.surname.value().trim().replaceAll("\\s+", "");
+    String baseUsername = (nameInitial + cleanSurname).toLowerCase();
 
     if (userRepository.usernameExists(baseUsername)) {
       Random random = new Random();

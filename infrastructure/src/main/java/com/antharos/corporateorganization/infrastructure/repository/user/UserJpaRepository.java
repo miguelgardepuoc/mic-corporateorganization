@@ -12,4 +12,6 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
   boolean existsByEmployeeNumber(Long employeeNumber);
 
   Optional<UserEntity> findByUsername(String username);
+
+  Optional<UserEntity> findTopByOrderByEmployeeNumberDesc();
 }

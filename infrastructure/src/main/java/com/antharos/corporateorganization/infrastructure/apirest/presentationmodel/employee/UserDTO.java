@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel;
+package com.antharos.corporateorganization.infrastructure.apirest.presentationmodel.employee;
 
 import com.antharos.corporateorganization.domain.user.Role;
 import java.math.BigDecimal;
