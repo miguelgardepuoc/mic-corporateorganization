@@ -48,4 +48,19 @@ public class MessageProducerImpl implements MessageProducer {
   public void sendUserHiredMessage(User user) {
     this.sendMessage(UUID.fromString(user.getId().getValueAsString()), "USER_HIRED", user);
   }
+
+  @Override
+  public void sendUserPutOnLeaveEvent(User user) {
+    this.sendMessage(UUID.fromString(user.getId().getValueAsString()), "USER_ON_LEAVE", user);
+  }
+
+  @Override
+  public void sendUserTerminatedEvent(User user) {
+    this.sendMessage(UUID.fromString(user.getId().getValueAsString()), "USER_TERMINATED", user);
+  }
+
+  @Override
+  public void sendUserMarkedAsInactiveEvent(User user) {
+    this.sendMessage(UUID.fromString(user.getId().getValueAsString()), "USER_MARKED_AS_INACTIVE", user);
+  }
 }

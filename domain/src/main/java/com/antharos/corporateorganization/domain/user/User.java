@@ -1,10 +1,12 @@
 package com.antharos.corporateorganization.domain.user;
 
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.user.repository.UserRepository;
+
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import lombok.Builder;
@@ -49,11 +51,11 @@ public class User implements UserDetails {
 
   private String createdBy;
 
-  private Date createdAt;
+  private LocalDate createdAt;
 
   private String lastModifiedBy;
 
-  private Date lastModifiedAt;
+  private LocalDate lastModifiedAt;
 
   @Builder
   public User(
@@ -73,9 +75,9 @@ public class User implements UserDetails {
       Role role,
       JobTitle jobTitle,
       String createdBy,
-      Date createdAt,
+      LocalDate createdAt,
       String lastModifiedBy,
-      Date lastModifiedAt) {
+      LocalDate lastModifiedAt) {
     this.id = id;
     this.username = username;
     this.password = password;
@@ -115,9 +117,9 @@ public class User implements UserDetails {
       String corporateEmail,
       Status status,
       String createdBy,
-      Date createdAt,
+      LocalDate createdAt,
       String lastModifiedBy,
-      Date lastModifiedAt) {
+      LocalDate lastModifiedAt) {
     this.id = id;
     this.employeeNumber = employeeNumber;
     this.username = username;
@@ -202,6 +204,33 @@ public class User implements UserDetails {
 
   public void signup(String password) {
     this.password = password;
+  }
+
+  public void putOnLeave(final String modificationUser) {
+    if (Status.ON_LEAVE.equals(this.status)) {
+      throw new ConflictException();
+    }
+    this.status = Status.ON_LEAVE;
+    this.lastModifiedAt = LocalDate.now();
+    this.lastModifiedBy = modificationUser;
+  }
+
+  public void terminate(final String modificationUser) {
+    if (Status.TERMINATED.equals(this.status)) {
+      throw new ConflictException();
+    }
+    this.status = Status.TERMINATED;
+    this.lastModifiedAt = LocalDate.now();
+    this.lastModifiedBy = modificationUser;
+  }
+
+  public void markAsInactive(final String modificationUser) {
+    if (Status.INACTIVE.equals(this.status)) {
+      throw new ConflictException();
+    }
+    this.status = Status.INACTIVE;
+    this.lastModifiedAt = LocalDate.now();
+    this.lastModifiedBy = modificationUser;
   }
 
   @Override
