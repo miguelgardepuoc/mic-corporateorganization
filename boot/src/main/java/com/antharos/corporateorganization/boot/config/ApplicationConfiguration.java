@@ -1,6 +1,6 @@
 package com.antharos.corporateorganization.boot.config;
 
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

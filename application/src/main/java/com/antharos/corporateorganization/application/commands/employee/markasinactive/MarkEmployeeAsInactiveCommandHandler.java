@@ -1,8 +1,11 @@
 package com.antharos.corporateorganization.application.commands.employee.markasinactive;
 
-import com.antharos.corporateorganization.domain.user.*;
-import com.antharos.corporateorganization.domain.user.repository.MessageProducer;
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.*;
+import com.antharos.corporateorganization.domain.employee.event.EmployeeMarkedAsInactiveEvent;
+import com.antharos.corporateorganization.domain.employee.exception.EmployeeNotFoundException;
+import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,17 +15,24 @@ public class MarkEmployeeAsInactiveCommandHandler {
 
   private final UserRepository userRepository;
 
-  private final MessageProducer messageProducer;
+  private final EventProducer eventProducer;
 
   public void doHandle(final MarkEmployeeAsInactiveCommand command) {
-    final UserId userId = UserId.of(command.getUserId());
+    final EmployeeId employeeId = EmployeeId.of(command.getUserId());
 
-    User user = this.userRepository
-        .findBy(userId)
-            .orElseThrow(() -> new UserNotFoundException(command.getUserId()));
+    Employee employee =
+        this.userRepository
+            .findBy(employeeId)
+            .orElseThrow(() -> new EmployeeNotFoundException(command.getUserId()));
 
-    user.markAsInactive(command.getModificationUser());
-    this.userRepository.save(user);
-    this.messageProducer.sendUserMarkedAsInactiveEvent(user);
+    employee.markAsInactive(command.getModificationUser(), eventProducer);
+    this.userRepository.save(employee);
+
+    for (Object event : employee.getDomainEvents()) {
+      if (event instanceof EmployeeMarkedAsInactiveEvent(Employee newEmployee)) {
+        eventProducer.sendEmployeeMarkedAsInactiveEvent(newEmployee);
+      }
+    }
+    employee.clearDomainEvents();
   }
 }

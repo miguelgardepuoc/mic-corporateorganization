@@ -1,6 +1,6 @@
 package com.antharos.corporateorganization.application.commands.employee.hire;
 
-import com.antharos.corporateorganization.domain.user.Role;
+import com.antharos.corporateorganization.domain.employee.Role;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Builder;

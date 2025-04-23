@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.domain.user;
+package com.antharos.corporateorganization.domain.employee;
 
 public enum Status {
   ACTIVE,

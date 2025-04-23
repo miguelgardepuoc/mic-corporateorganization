@@ -1,25 +1,28 @@
-package com.antharos.corporateorganization.domain.user;
+package com.antharos.corporateorganization.domain.employee;
 
+import com.antharos.corporateorganization.domain.dddbase.AggregateRoot;
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.employee.event.EmployeeHiredEvent;
+import com.antharos.corporateorganization.domain.employee.event.EmployeeMarkedAsInactiveEvent;
+import com.antharos.corporateorganization.domain.employee.event.EmployeeOnLeaveEvent;
+import com.antharos.corporateorganization.domain.employee.event.EmployeeTerminatedEvent;
+import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User implements UserDetails {
-
-  private final UserId id;
+public class Employee extends AggregateRoot implements UserDetails {
+  private final EmployeeId id;
 
   private Dni dni;
 
@@ -58,8 +61,8 @@ public class User implements UserDetails {
   private LocalDate lastModifiedAt;
 
   @Builder
-  public User(
-      UserId id,
+  public Employee(
+      EmployeeId id,
       Long employeeNumber,
       Dni dni,
       String username,
@@ -100,8 +103,8 @@ public class User implements UserDetails {
   }
 
   @Builder
-  public User(
-      UserId id,
+  public Employee(
+      EmployeeId id,
       Long employeeNumber,
       String username,
       Dni dni,
@@ -141,12 +144,12 @@ public class User implements UserDetails {
     this.lastModifiedAt = lastModifiedAt;
   }
 
-  public User(UserId id) {
+  public Employee(EmployeeId id) {
     this.id = id;
   }
 
-  public static User create(
-      UserId userId,
+  public static Employee hire(
+      EmployeeId employeeId,
       Long employeeNumber,
       Dni dni,
       Name name,
@@ -160,9 +163,9 @@ public class User implements UserDetails {
       String createdBy,
       UserRepository userRepository) {
 
-    User u =
-        new User(
-            userId,
+    Employee u =
+        new Employee(
+            employeeId,
             employeeNumber,
             dni,
             null,
@@ -185,6 +188,7 @@ public class User implements UserDetails {
     u.username = u.generateUsername(userRepository);
     u.corporateEmail = u.username + "@antharos.com";
     u.status = Status.ACTIVE;
+    u.addDomainEvent(new EmployeeHiredEvent(u));
 
     return u;
   }
@@ -202,7 +206,7 @@ public class User implements UserDetails {
     return baseUsername;
   }
 
-  public void signup(String password) {
+  public void signup(final String password) {
     this.password = password;
   }
 
@@ -211,8 +215,8 @@ public class User implements UserDetails {
       throw new ConflictException();
     }
     this.status = Status.ON_LEAVE;
-    this.lastModifiedAt = LocalDate.now();
     this.lastModifiedBy = modificationUser;
+    this.addDomainEvent(new EmployeeOnLeaveEvent(this));
   }
 
   public void terminate(final String modificationUser) {
@@ -220,17 +224,18 @@ public class User implements UserDetails {
       throw new ConflictException();
     }
     this.status = Status.TERMINATED;
-    this.lastModifiedAt = LocalDate.now();
     this.lastModifiedBy = modificationUser;
+    this.addDomainEvent(new EmployeeTerminatedEvent(this));
   }
 
-  public void markAsInactive(final String modificationUser) {
+  public void markAsInactive(final String modificationUser, EventProducer eventProducer) {
     if (Status.INACTIVE.equals(this.status)) {
       throw new ConflictException();
     }
     this.status = Status.INACTIVE;
-    this.lastModifiedAt = LocalDate.now();
     this.lastModifiedBy = modificationUser;
+    eventProducer.sendEmployeeMarkedAsInactiveEvent(this);
+    this.addDomainEvent(new EmployeeMarkedAsInactiveEvent(this));
   }
 
   @Override
@@ -261,5 +266,54 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Employee{"
+        + "id="
+        + id
+        + ", dni="
+        + dni
+        + ", name="
+        + name
+        + ", surname="
+        + surname
+        + ", role="
+        + role
+        + ", telephoneNumber="
+        + telephoneNumber
+        + ", username='"
+        + username
+        + '\''
+        + ", password='"
+        + password
+        + '\''
+        + ", employeeNumber="
+        + employeeNumber
+        + ", department="
+        + department
+        + ", corporateEmail='"
+        + corporateEmail
+        + '\''
+        + ", salary="
+        + salary
+        + ", hiringDate="
+        + hiringDate
+        + ", status="
+        + status
+        + ", jobTitle="
+        + jobTitle
+        + ", createdBy='"
+        + createdBy
+        + '\''
+        + ", createdAt="
+        + createdAt
+        + ", lastModifiedBy='"
+        + lastModifiedBy
+        + '\''
+        + ", lastModifiedAt="
+        + lastModifiedAt
+        + '}';
   }
 }

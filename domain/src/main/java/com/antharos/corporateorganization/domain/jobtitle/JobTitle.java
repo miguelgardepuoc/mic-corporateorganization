@@ -1,7 +1,6 @@
 package com.antharos.corporateorganization.domain.jobtitle;
 
-import java.util.Date;
-import java.util.UUID;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class JobTitle {
 
-  private UUID id;
+  private JobTitleId id;
 
   private String description;
 
@@ -19,13 +18,13 @@ public class JobTitle {
 
   private String createdBy;
 
-  private Date createdAt;
+  private LocalDate createdAt;
 
   private String lastModifiedBy;
 
-  private Date lastModifiedAt;
+  private LocalDate lastModifiedAt;
 
-  public JobTitle(UUID id) {
+  public JobTitle(JobTitleId id) {
     this.id = id;
   }
 }

@@ -39,7 +39,7 @@ producer:
     user: ${PRODUCER_ARTEMIS_USER:admin}
     password: ${PRODUCER_ARTEMIS_PASSWORD:admin}
   topic:
-    name: ${PRODUCER_TOPIC_NAME:test-topic}
+    name: ${PRODUCER_TOPIC_NAME:corporate-organization.employee}
 
 security:
   jwt:

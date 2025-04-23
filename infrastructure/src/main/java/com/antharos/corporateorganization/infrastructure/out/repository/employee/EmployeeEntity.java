@@ -1,24 +1,25 @@
-package com.antharos.corporateorganization.infrastructure.out.repository.user;
+package com.antharos.corporateorganization.infrastructure.out.repository.employee;
 
-import com.antharos.corporateorganization.domain.user.Role;
-import com.antharos.corporateorganization.domain.user.Status;
+import com.antharos.corporateorganization.domain.employee.Role;
+import com.antharos.corporateorganization.domain.employee.Status;
 import com.antharos.corporateorganization.infrastructure.out.repository.department.DepartmentEntity;
 import com.antharos.corporateorganization.infrastructure.out.repository.jobtitle.JobTitleEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 import lombok.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "\"employee\"")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class EmployeeEntity {
 
   @Id private UUID id;
 
@@ -31,8 +32,9 @@ public class UserEntity {
   @Column(nullable = false)
   private String surname;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, columnDefinition = "role_enum")
+  @Enumerated
+  @JdbcType(PostgreSQLEnumJdbcType.class)
   private Role role;
 
   @Column(nullable = false, length = 20)
@@ -62,7 +64,8 @@ public class UserEntity {
   private LocalDate hiringDate;
 
   @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Enumerated
+  @JdbcType(PostgreSQLEnumJdbcType.class)
   private Status status;
 
   @ManyToOne
@@ -72,22 +75,20 @@ public class UserEntity {
   @Column(nullable = false)
   private String createdBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
-  private Date createdAt;
+  private LocalDate createdAt;
 
   private String lastModifiedBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date lastModifiedAt;
+  private LocalDate lastModifiedAt;
 
   @PrePersist
   protected void onCreate() {
-    createdAt = new Date();
+    createdAt = LocalDate.now();
   }
 
   @PreUpdate
   protected void onUpdate() {
-    lastModifiedAt = new Date();
+    lastModifiedAt = LocalDate.now();
   }
 }

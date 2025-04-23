@@ -1,20 +1,22 @@
-package com.antharos.corporateorganization.infrastructure.out.repository.user;
+package com.antharos.corporateorganization.infrastructure.out.repository.employee;
 
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
+import com.antharos.corporateorganization.domain.employee.*;
+import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
-import com.antharos.corporateorganization.domain.user.*;
+import com.antharos.corporateorganization.domain.jobtitle.JobTitleId;
 import com.antharos.corporateorganization.infrastructure.out.repository.department.DepartmentEntityMapper;
 import com.antharos.corporateorganization.infrastructure.out.repository.jobtitle.JobTitleEntityMapper;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface UserEntityMapper {
+public interface EmployeeEntityMapper {
 
-  default User toDomain(UserEntity entity) {
-    return User.builder()
-        .id(UserId.of(entity.getId().toString()))
+  default Employee toDomain(EmployeeEntity entity) {
+    return Employee.builder()
+        .id(EmployeeId.of(entity.getId().toString()))
         .employeeNumber(entity.getEmployeeNumber())
         .username(entity.getUsername())
         .dni(Dni.of(entity.getDni()))
@@ -25,7 +27,7 @@ public interface UserEntityMapper {
         .salary(new Salary(entity.getSalary()))
         .hiringDate(new HiringDate(entity.getHiringDate()))
         .role(entity.getRole())
-        .jobTitle(new JobTitle(entity.getJobTitle().getId()))
+        .jobTitle(new JobTitle(JobTitleId.of(String.valueOf(entity.getJobTitle().getId()))))
         .password(entity.getPassword())
         .corporateEmail(entity.getCorporateEmail())
         .status(entity.getStatus())
@@ -36,11 +38,11 @@ public interface UserEntityMapper {
         .build();
   }
 
-  default UserEntity toEntity(
-      User domain,
+  default EmployeeEntity toEntity(
+      Employee domain,
       DepartmentEntityMapper departmentEntityMapper,
       JobTitleEntityMapper jobTitleEntityMapper) {
-    UserEntity entity = new UserEntity();
+    EmployeeEntity entity = new EmployeeEntity();
     entity.setId(UUID.fromString(domain.getId().getValueAsString()));
     entity.setEmployeeNumber(domain.getEmployeeNumber());
     entity.setUsername(domain.getUsername());

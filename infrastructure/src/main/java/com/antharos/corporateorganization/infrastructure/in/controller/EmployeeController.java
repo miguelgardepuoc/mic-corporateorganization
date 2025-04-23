@@ -9,7 +9,7 @@ import com.antharos.corporateorganization.application.commands.employee.putonlea
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommand;
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommandHandler;
 import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQueryHandler;
-import com.antharos.corporateorganization.domain.user.User;
+import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeMapper;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.HireEmployeeRequest;
@@ -34,7 +34,7 @@ public class EmployeeController {
   private final EmployeeMapper employeeMapper;
 
   @PostMapping("/hiring")
-  public ResponseEntity<User> hireEmployee(@RequestBody HireEmployeeRequest request) {
+  public ResponseEntity<Employee> hireEmployee(@RequestBody HireEmployeeRequest request) {
     HireEmployeeCommand command =
         HireEmployeeCommand.builder()
             .userId(request.id())
@@ -63,21 +63,33 @@ public class EmployeeController {
 
   @PatchMapping("/{id}/on-leave")
   public ResponseEntity<Void> putUserOnLeave(@PathVariable String id) {
-    PutEmployeeOnLeaveCommand command = PutEmployeeOnLeaveCommand.builder().userId(id).modificationUser(this.auditorUtils.getCurrentUsername()).build();
+    PutEmployeeOnLeaveCommand command =
+        PutEmployeeOnLeaveCommand.builder()
+            .userId(id)
+            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .build();
     this.putEmployeeOnLeaveCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/{id}/termination")
   public ResponseEntity<Void> terminateUser(@PathVariable String id) {
-    TerminateEmployeeCommand command = TerminateEmployeeCommand.builder().userId(id).modificationUser(this.auditorUtils.getCurrentUsername()).build();
+    TerminateEmployeeCommand command =
+        TerminateEmployeeCommand.builder()
+            .userId(id)
+            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .build();
     this.terminateEmployeeCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/{id}/inactivation")
   public ResponseEntity<Void> markUserAsInactive(@PathVariable String id) {
-    MarkEmployeeAsInactiveCommand command = MarkEmployeeAsInactiveCommand.builder().userId(id).modificationUser(this.auditorUtils.getCurrentUsername()).build();
+    MarkEmployeeAsInactiveCommand command =
+        MarkEmployeeAsInactiveCommand.builder()
+            .userId(id)
+            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .build();
     this.markEmployeeAsInactiveCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
   }

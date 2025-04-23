@@ -1,8 +1,8 @@
 package com.antharos.corporateorganization.infrastructure.in.dto.employee;
 
-import com.antharos.corporateorganization.domain.user.*;
+import com.antharos.corporateorganization.domain.employee.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public record EmployeeResponse(
     String id,
@@ -16,6 +16,6 @@ public record EmployeeResponse(
     String departmentId,
     String corporateEmail,
     BigDecimal salary,
-    Date hiringDate,
+    LocalDate hiringDate,
     String jobTitleId,
     Status status) {}

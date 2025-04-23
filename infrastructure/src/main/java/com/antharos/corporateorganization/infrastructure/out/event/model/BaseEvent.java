@@ -1,8 +1,8 @@
 package com.antharos.corporateorganization.infrastructure.out.event.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "_type")
-public class BaseMessage<T> implements Serializable {
+public final class BaseEvent<T> implements Serializable {
   @Serial private static final long serialVersionUID = 1L;
 
-  private String id;
-  private String subject;
-  private T content;
+  private String eventId;
+  private Instant timestamp;
+  private String eventName;
+  private String aggregateId;
+  private String aggregateType;
+  private String causedBy;
+  private int version;
+  private T payload;
 }

@@ -2,7 +2,7 @@ package com.antharos.corporateorganization.infrastructure.out.repository.jobtitl
 
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,22 +28,20 @@ public class JobTitleEntity {
   @Column(nullable = false)
   private String createdBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
-  private Date createdAt;
+  private LocalDate createdAt;
 
   private String lastModifiedBy;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date lastModifiedAt;
+  private LocalDate lastModifiedAt;
 
   @PrePersist
   protected void onCreate() {
-    createdAt = new Date();
+    createdAt = LocalDate.now();
   }
 
   @PreUpdate
   protected void onUpdate() {
-    lastModifiedAt = new Date();
+    lastModifiedAt = LocalDate.now();
   }
 }

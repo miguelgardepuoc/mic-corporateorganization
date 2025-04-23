@@ -2,8 +2,8 @@ package com.antharos.corporateorganization.infrastructure.out.repository.departm
 
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
-import com.antharos.corporateorganization.domain.user.User;
-import com.antharos.corporateorganization.domain.user.UserId;
+import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 
@@ -15,7 +15,7 @@ public interface DepartmentEntityMapper {
         DepartmentId.of(entity.getId().toString()),
         entity.getDescription(),
         entity.getDepartmentHead() != null
-            ? new User(UserId.of(entity.getDepartmentHead().getId().toString()))
+            ? new Employee(EmployeeId.of(entity.getDepartmentHead().getId().toString()))
             : null,
         entity.isActive(),
         entity.getCreatedBy(),

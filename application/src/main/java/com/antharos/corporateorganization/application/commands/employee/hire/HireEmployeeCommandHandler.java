@@ -4,13 +4,15 @@ import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.department.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.department.DepartmentRepository;
+import com.antharos.corporateorganization.domain.employee.*;
+import com.antharos.corporateorganization.domain.employee.exception.EmployeeAlreadyExists;
+import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitleId;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitleNotFoundException;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitleRepository;
-import com.antharos.corporateorganization.domain.user.*;
-import com.antharos.corporateorganization.domain.user.repository.MessageProducer;
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,16 +26,16 @@ public class HireEmployeeCommandHandler {
 
   private final JobTitleRepository jobTitleRepository;
 
-  private final MessageProducer messageProducer;
+  private final EventProducer eventProducer;
 
   public void doHandle(final HireEmployeeCommand command) {
-    final UserId userId = UserId.of(command.getUserId());
+    final EmployeeId employeeId = EmployeeId.of(command.getUserId());
 
     this.userRepository
-        .findBy(userId)
+        .findBy(employeeId)
         .ifPresent(
             existing -> {
-              throw new UserAlreadyExists();
+              throw new EmployeeAlreadyExists();
             });
 
     final DepartmentId departmentId = DepartmentId.of(command.getDepartmentId());
@@ -53,7 +55,7 @@ public class HireEmployeeCommandHandler {
     final Long lastEmployeeNumber =
         this.userRepository
             .findTopByOrderByEmployeeNumberDesc()
-            .map(User::getEmployeeNumber)
+            .map(Employee::getEmployeeNumber)
             .orElse(0L);
 
     final Long newEmployeeNumber = lastEmployeeNumber + 1;
@@ -63,9 +65,9 @@ public class HireEmployeeCommandHandler {
     final Salary salary = new Salary(command.getSalary());
     final HiringDate hiringDate = new HiringDate(command.getHiringDate());
 
-    final User user =
-        User.create(
-            userId,
+    final Employee employee =
+        Employee.hire(
+            employeeId,
             newEmployeeNumber,
             Dni.of(command.getDni()),
             name,
@@ -79,7 +81,7 @@ public class HireEmployeeCommandHandler {
             command.getCreatedBy(),
             this.userRepository);
 
-    this.userRepository.save(user);
-    this.messageProducer.sendUserHiredMessage(user);
+    this.userRepository.save(employee);
+    this.eventProducer.sendEmployeeHiredEvent(employee);
   }
 }

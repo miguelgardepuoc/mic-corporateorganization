@@ -1,7 +1,7 @@
 package com.antharos.corporateorganization.application.commands.login;
 
-import com.antharos.corporateorganization.domain.user.User;
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,7 +15,7 @@ public class LoginCommandHandler {
 
   private final AuthenticationManager authenticationManager;
 
-  public User handle(LoginCommand command) {
+  public Employee handle(LoginCommand command) {
     this.authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(command.getUsername(), command.getPassword()));
 

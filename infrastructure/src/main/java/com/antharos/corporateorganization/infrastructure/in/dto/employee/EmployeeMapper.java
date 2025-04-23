@@ -1,8 +1,9 @@
 package com.antharos.corporateorganization.infrastructure.in.dto.employee;
 
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.employee.*;
+import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
-import com.antharos.corporateorganization.domain.user.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -13,11 +14,11 @@ import org.mapstruct.Mapping;
 public interface EmployeeMapper {
   @Mapping(source = "jobTitle", target = "jobTitleId")
   @Mapping(source = "department", target = "departmentId")
-  EmployeeResponse toEmployeeResponse(User user);
+  EmployeeResponse toEmployeeResponse(Employee employee);
 
-  List<EmployeeResponse> toEmployeeResponse(List<User> users);
+  List<EmployeeResponse> toEmployeeResponse(List<Employee> employees);
 
-  default String map(UserId id) {
+  default String map(EmployeeId id) {
     return id == null ? null : id.getValueAsString();
   }
 

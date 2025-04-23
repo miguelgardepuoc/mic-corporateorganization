@@ -4,7 +4,7 @@ import com.antharos.corporateorganization.application.commands.login.LoginComman
 import com.antharos.corporateorganization.application.commands.login.LoginCommandHandler;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommand;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommandHandler;
-import com.antharos.corporateorganization.domain.user.User;
+import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.infrastructure.in.dto.LoginRequest;
 import com.antharos.corporateorganization.infrastructure.in.dto.LoginResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.RegisterUserRequest;
@@ -44,9 +44,9 @@ public class AuthController {
             .password(request.getPassword())
             .build();
 
-    final User authenticatedUser = this.loginCommandHandler.handle(command);
+    final Employee authenticatedEmployee = this.loginCommandHandler.handle(command);
 
-    final String jwtToken = this.jwtService.generateToken(authenticatedUser);
+    final String jwtToken = this.jwtService.generateToken(authenticatedEmployee);
 
     final LoginResponse loginResponse = new LoginResponse();
     loginResponse.setToken(jwtToken);

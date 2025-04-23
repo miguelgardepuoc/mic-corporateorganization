@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.domain.user;
+package com.antharos.corporateorganization.domain.employee.valueobject;
 
 import java.util.Objects;
 import lombok.AccessLevel;

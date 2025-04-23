@@ -1,7 +1,7 @@
 package com.antharos.corporateorganization.application.commands.signup;
 
-import com.antharos.corporateorganization.domain.user.User;
-import com.antharos.corporateorganization.domain.user.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,12 +14,12 @@ public class SignUpCommandHandler {
   private final PasswordEncoder passwordEncoder;
 
   public void handle(SignUpCommand command) {
-    User user =
+    Employee employee =
         this.userRepository
             .findByUsername(command.getUsername())
             .orElseThrow(() -> new BadCredentialsException(command.getUsername()));
-    user.signup(this.passwordEncoder.encode(command.getPassword()));
+    employee.signup(this.passwordEncoder.encode(command.getPassword()));
 
-    this.userRepository.save(user);
+    this.userRepository.save(employee);
   }
 }

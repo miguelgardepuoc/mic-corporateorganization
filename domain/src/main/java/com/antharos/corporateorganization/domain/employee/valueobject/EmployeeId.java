@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.domain.user;
+package com.antharos.corporateorganization.domain.employee.valueobject;
 
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -7,17 +7,17 @@ import lombok.Value;
 
 @Value
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserId {
+public class EmployeeId {
 
   String valueAsString;
 
-  public static UserId of(String userId) {
+  public static EmployeeId of(String userId) {
     try {
       UUID.fromString(userId);
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException(
           "UserId must be a valid UUID. Invalid string value: " + userId);
     }
-    return new UserId(userId);
+    return new EmployeeId(userId);
   }
 }
