@@ -8,13 +8,17 @@ import com.antharos.corporateorganization.application.commands.employee.putonlea
 import com.antharos.corporateorganization.application.commands.employee.putonleave.PutEmployeeOnLeaveCommandHandler;
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommand;
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommandHandler;
+import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQuery;
+import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQueryHandler;
 import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQueryHandler;
 import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeAuthResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeMapper;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.HireEmployeeRequest;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ public class EmployeeController {
 
   private final HireEmployeeCommandHandler hireEmployeeCommandHandler;
   private final FindEmployeesQueryHandler findEmployeesQueryHandler;
+  private final FindEmployeeByUsernameQueryHandler findByUsername;
   private final TerminateEmployeeCommandHandler terminateEmployeeCommandHandler;
   private final PutEmployeeOnLeaveCommandHandler putEmployeeOnLeaveCommandHandler;
   private final MarkEmployeeAsInactiveCommandHandler markEmployeeAsInactiveCommandHandler;
@@ -92,5 +97,16 @@ public class EmployeeController {
             .build();
     this.markEmployeeAsInactiveCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/username/{username}")
+  public ResponseEntity<EmployeeAuthResponse> getEmployeeByUsername(@PathVariable String username) {
+    Optional<Employee> employee =
+        this.findByUsername.handle(
+            FindEmployeeByUsernameQuery.builder().username(username).build());
+
+    return employee
+        .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeAuthResponse(emp)))
+        .orElse(ResponseEntity.notFound().build());
   }
 }

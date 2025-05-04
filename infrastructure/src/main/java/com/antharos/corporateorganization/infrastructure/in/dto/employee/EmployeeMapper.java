@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
+  EmployeeAuthResponse toEmployeeAuthResponse(Employee employee);
+
   @Mapping(source = "jobTitle", target = "jobTitleId")
   @Mapping(source = "department", target = "departmentId")
   EmployeeResponse toEmployeeResponse(Employee employee);
@@ -49,7 +51,9 @@ public interface EmployeeMapper {
   }
 
   default String map(JobTitle jobTitle) {
-    return jobTitle == null || jobTitle.getId() == null ? null : jobTitle.getId().toString();
+    return jobTitle == null || jobTitle.getId() == null
+        ? null
+        : jobTitle.getId().getValueAsString();
   }
 
   default BigDecimal map(Salary salary) {

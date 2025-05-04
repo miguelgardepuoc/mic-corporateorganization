@@ -1,9 +1,11 @@
 package com.antharos.corporateorganization.infrastructure.in.util;
 
+import com.antharos.corporateorganization.domain.employee.exception.*;
 import com.antharos.corporateorganization.domain.globalexceptions.AlreadyExistsException;
 import com.antharos.corporateorganization.domain.globalexceptions.NotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -76,5 +78,51 @@ public class GlobalExceptionHandler {
     }
 
     return errorDetail;
+  }
+
+  @ExceptionHandler(InvalidDepartmentException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidDepartment(InvalidDepartmentException ex) {
+    return buildErrorResponse("department", "INVALID_DEPARTMENT", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidDniException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidDni(InvalidDniException ex) {
+    return buildErrorResponse("dni", "INVALID_DNI", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidHiringDateException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidHiringDate(InvalidHiringDateException ex) {
+    return buildErrorResponse("hiringDate", "INVALID_HIRING_DATE", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidJobTitleException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidJobTitle(InvalidJobTitleException ex) {
+    return buildErrorResponse("jobTitle", "INVALID_JOB_TITLE", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidNameException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidName(InvalidNameException ex) {
+    return buildErrorResponse("name", "INVALID_NAME", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidSalaryException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidSalary(InvalidSalaryException ex) {
+    return buildErrorResponse("salary", "INVALID_SALARY", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidSurnameException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidSurname(InvalidSurnameException ex) {
+    return buildErrorResponse("surname", "INVALID_SURNAME", ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidTelephoneException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidPhone(InvalidTelephoneException ex) {
+    return buildErrorResponse("telephone", "INVALID_PHONE_FORMAT", ex.getMessage());
+  }
+
+  private ResponseEntity<ErrorResponse> buildErrorResponse(
+      String field, String code, String message) {
+    ErrorResponse errorResponse = new ErrorResponse(List.of(new FieldError(field, code, message)));
+    return ResponseEntity.badRequest().body(errorResponse);
   }
 }

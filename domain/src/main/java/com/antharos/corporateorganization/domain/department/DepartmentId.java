@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.domain.department;
 
+import com.antharos.corporateorganization.domain.employee.exception.InvalidDepartmentException;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class DepartmentId {
     try {
       UUID.fromString(departmentId);
     } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException(
+      throw new InvalidDepartmentException(
           "DepartmentId must be a valid UUID. Invalid string value: " + departmentId);
     }
     return new DepartmentId(departmentId);

@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.domain.jobtitle;
 
+import com.antharos.corporateorganization.domain.employee.exception.InvalidJobTitleException;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class JobTitleId {
     try {
       UUID.fromString(jobTitleId);
     } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException(
+      throw new InvalidJobTitleException(
           "JobTitleId must be a valid UUID. Invalid string value: " + jobTitleId);
     }
     return new JobTitleId(jobTitleId);

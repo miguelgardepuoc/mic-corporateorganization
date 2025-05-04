@@ -68,9 +68,9 @@ INSERT INTO "department" (
     "last_modified_by",
     "last_modified_at"
 ) VALUES
-('a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'IT Department', NULL, true, 'system', CURRENT_DATE, NULL, NULL),
-('db978bbe-a875-4368-a58a-3a864d3af8ec', 'Human Resources', NULL, true,'system', CURRENT_DATE, NULL, NULL),
-('2bc45806-1fc2-47f5-a39a-2d60f399f47a', 'Finance', NULL, true,'system', CURRENT_DATE, NULL, NULL),
+('a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'Tecnología', NULL, true, 'system', CURRENT_DATE, NULL, NULL),
+('db978bbe-a875-4368-a58a-3a864d3af8ec', 'Recursos Humanos', NULL, true,'system', CURRENT_DATE, NULL, NULL),
+('2bc45806-1fc2-47f5-a39a-2d60f399f47a', 'Finanzas', NULL, true,'system', CURRENT_DATE, NULL, NULL),
 ('3bcc77b4-13c3-4f73-9627-0c27ab3ffe8d', 'Marketing', NULL, true,'system', CURRENT_DATE, NULL, NULL);
 
 INSERT INTO "job_title" ("id", "description", "photo_url", "created_by", "created_at", "last_modified_by", "last_modified_at")

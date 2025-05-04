@@ -30,7 +30,7 @@ public class MarkEmployeeAsInactiveCommandHandler {
 
     for (Object event : employee.getDomainEvents()) {
       if (event instanceof EmployeeMarkedAsInactiveEvent(Employee newEmployee)) {
-        eventProducer.sendEmployeeMarkedAsInactiveEvent(newEmployee);
+        this.eventProducer.sendEmployeeMarkedAsInactiveEvent(newEmployee);
       }
     }
     employee.clearDomainEvents();

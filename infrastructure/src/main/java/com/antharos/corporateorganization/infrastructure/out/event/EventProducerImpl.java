@@ -1,5 +1,7 @@
 package com.antharos.corporateorganization.infrastructure.out.event;
 
+import static com.antharos.corporateorganization.infrastructure.out.event.model.EventNames.*;
+
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
 import com.antharos.corporateorganization.infrastructure.out.event.model.BaseEvent;
@@ -56,9 +58,9 @@ public class EventProducerImpl implements EventProducer {
         new BaseEvent<>(
             UUID.randomUUID().toString(),
             Instant.now(),
-            "EmployeeHired",
+            EMPLOYEE_HIRED.getDescription(),
             employee.getId().getValueAsString(),
-                EMPLOYEE_AGGREGATE,
+            EMPLOYEE_AGGREGATE,
             employee.getCreatedBy(),
             1,
             this.mapper.toPayload(employee));
@@ -71,9 +73,9 @@ public class EventProducerImpl implements EventProducer {
         new BaseEvent<>(
             UUID.randomUUID().toString(),
             Instant.now(),
-            "EmployeeOnLeave",
+            EMPLOYEE_ON_LEAVE.getDescription(),
             employee.getId().getValueAsString(),
-                EMPLOYEE_AGGREGATE,
+            EMPLOYEE_AGGREGATE,
             employee.getLastModifiedBy(),
             1,
             this.mapper.toPayload(employee));
@@ -86,9 +88,9 @@ public class EventProducerImpl implements EventProducer {
         new BaseEvent<>(
             UUID.randomUUID().toString(),
             Instant.now(),
-            "EmployeeTerminated",
+            EMPLOYEE_TERMINATED.getDescription(),
             employee.getId().getValueAsString(),
-                EMPLOYEE_AGGREGATE,
+            EMPLOYEE_AGGREGATE,
             employee.getLastModifiedBy(),
             1,
             this.mapper.toPayload(employee));
@@ -101,9 +103,9 @@ public class EventProducerImpl implements EventProducer {
         new BaseEvent<>(
             UUID.randomUUID().toString(),
             Instant.now(),
-            "EmployeeMarkedAsInactive",
+            EMPLOYEE_MARKED_AS_INACTIVE.getDescription(),
             employee.getId().getValueAsString(),
-                EMPLOYEE_AGGREGATE,
+            EMPLOYEE_AGGREGATE,
             employee.getLastModifiedBy(),
             1,
             this.mapper.toPayload(employee));

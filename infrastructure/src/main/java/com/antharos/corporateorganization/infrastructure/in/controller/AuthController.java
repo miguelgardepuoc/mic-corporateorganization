@@ -1,14 +1,8 @@
 package com.antharos.corporateorganization.infrastructure.in.controller;
 
-import com.antharos.corporateorganization.application.commands.login.LoginCommand;
-import com.antharos.corporateorganization.application.commands.login.LoginCommandHandler;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommand;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommandHandler;
-import com.antharos.corporateorganization.domain.employee.Employee;
-import com.antharos.corporateorganization.infrastructure.in.dto.LoginRequest;
-import com.antharos.corporateorganization.infrastructure.in.dto.LoginResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.RegisterUserRequest;
-import com.antharos.corporateorganization.infrastructure.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-  private final LoginCommandHandler loginCommandHandler;
   private final SignUpCommandHandler signUpCommandHandler;
-  private final JwtService jwtService;
 
   @PostMapping("/signup")
   public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
@@ -34,24 +26,5 @@ public class AuthController {
             .build();
     this.signUpCommandHandler.handle(command);
     return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @PostMapping("/login")
-  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-    final LoginCommand command =
-        LoginCommand.builder()
-            .username(request.getUsername())
-            .password(request.getPassword())
-            .build();
-
-    final Employee authenticatedEmployee = this.loginCommandHandler.handle(command);
-
-    final String jwtToken = this.jwtService.generateToken(authenticatedEmployee);
-
-    final LoginResponse loginResponse = new LoginResponse();
-    loginResponse.setToken(jwtToken);
-    loginResponse.setExpiresIn(this.jwtService.getExpirationTime());
-
-    return ResponseEntity.ok(loginResponse);
   }
 }
