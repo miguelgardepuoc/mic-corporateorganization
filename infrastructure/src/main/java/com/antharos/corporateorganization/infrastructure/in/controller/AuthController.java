@@ -3,6 +3,7 @@ package com.antharos.corporateorganization.infrastructure.in.controller;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommand;
 import com.antharos.corporateorganization.application.commands.signup.SignUpCommandHandler;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.RegisterUserRequest;
+import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
   private final SignUpCommandHandler signUpCommandHandler;
 
+  @PermitAll
   @PostMapping("/signup")
   public ResponseEntity<Void> register(@RequestBody RegisterUserRequest request) {
     final SignUpCommand command =

@@ -19,7 +19,6 @@
     </properties>
 
     <dependencies>
-        <!-- Internal -->
         <dependency>
             <groupId>com.antharos.corporateorganization</groupId>
             <artifactId>infrastructure</artifactId>
@@ -38,7 +37,6 @@
             <version>${project.version}</version>
         </dependency>
         
-        <!-- Test scope -->
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
@@ -72,9 +70,6 @@
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>
-                            <!-- We've already bound the "prepare-agent" phase in the parent POM.
-                                 Here, we're generating an aggregated report over all modules.
-                                 Note that this <execution> element is *added* to the one defined in the parent POM. -->
                             <execution>
                                 <id>report-aggregate</id>
                                 <phase>verify</phase>

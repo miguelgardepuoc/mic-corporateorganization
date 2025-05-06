@@ -6,9 +6,11 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,9 +27,8 @@ public class JwtService {
     return claimsResolver.apply(claims);
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+  public boolean isTokenValid(String token) {
+    return !isTokenExpired(token);
   }
 
   private boolean isTokenExpired(String token) {
@@ -49,5 +50,11 @@ public class JwtService {
   private Key getSignInKey() {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  public List<GrantedAuthority> extractRoles(String token) {
+    Claims claims = extractAllClaims(token);
+    String role = claims.get("role", String.class);
+    return List.of(new SimpleGrantedAuthority(role));
   }
 }

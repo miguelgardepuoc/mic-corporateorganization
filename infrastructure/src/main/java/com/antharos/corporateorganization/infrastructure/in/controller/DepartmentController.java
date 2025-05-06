@@ -12,6 +12,7 @@ import com.antharos.corporateorganization.infrastructure.in.dto.department.Depar
 import com.antharos.corporateorganization.infrastructure.in.dto.department.DepartmentResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.department.RenameDepartmentRequest;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
+import com.antharos.corporateorganization.infrastructure.security.ManagementOnly;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class DepartmentController {
   private final AuditorUtils auditorUtils;
   private final DepartmentMapper departmentMapper;
 
+  @ManagementOnly
   @GetMapping
   public ResponseEntity<List<DepartmentResponse>> findDepartments() {
     return ResponseEntity.ok(
@@ -37,6 +39,7 @@ public class DepartmentController {
             this.findDepartmentsQueryHandler.handle().stream().toList()));
   }
 
+  @ManagementOnly
   @PatchMapping("/{id}/renaming")
   public ResponseEntity<Void> renameDepartment(
       @PathVariable String id, @RequestBody RenameDepartmentRequest request) {
@@ -50,6 +53,7 @@ public class DepartmentController {
     return ResponseEntity.noContent().build();
   }
 
+  @ManagementOnly
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> disableDepartment(@PathVariable String id) {
     DisableDepartmentCommand command = DisableDepartmentCommand.builder().departmentId(id).build();
@@ -57,6 +61,7 @@ public class DepartmentController {
     return ResponseEntity.noContent().build();
   }
 
+  @ManagementOnly
   @PostMapping("")
   public ResponseEntity<Void> createDepartment(@RequestBody CreateDepartmentRequest request) {
     CreateDepartmentCommand command =

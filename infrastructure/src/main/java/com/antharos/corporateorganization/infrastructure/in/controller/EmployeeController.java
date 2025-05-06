@@ -17,6 +17,7 @@ import com.antharos.corporateorganization.infrastructure.in.dto.employee.Employe
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.HireEmployeeRequest;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
+import com.antharos.corporateorganization.infrastructure.security.ManagementOnly;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class EmployeeController {
   private final AuditorUtils auditorUtils;
   private final EmployeeMapper employeeMapper;
 
+  @ManagementOnly
   @PostMapping("/hiring")
   public ResponseEntity<Employee> hireEmployee(@RequestBody HireEmployeeRequest request) {
     HireEmployeeCommand command =
@@ -59,6 +61,7 @@ public class EmployeeController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  @ManagementOnly
   @GetMapping
   public ResponseEntity<List<EmployeeResponse>> findEmployees() {
     return ResponseEntity.ok(
@@ -66,6 +69,7 @@ public class EmployeeController {
             this.findEmployeesQueryHandler.handle().stream().toList()));
   }
 
+  @ManagementOnly
   @PatchMapping("/{id}/on-leave")
   public ResponseEntity<Void> putUserOnLeave(@PathVariable String id) {
     PutEmployeeOnLeaveCommand command =
@@ -77,6 +81,7 @@ public class EmployeeController {
     return ResponseEntity.ok().build();
   }
 
+  @ManagementOnly
   @PatchMapping("/{id}/termination")
   public ResponseEntity<Void> terminateUser(@PathVariable String id) {
     TerminateEmployeeCommand command =
@@ -88,6 +93,7 @@ public class EmployeeController {
     return ResponseEntity.ok().build();
   }
 
+  @ManagementOnly
   @PatchMapping("/{id}/inactivation")
   public ResponseEntity<Void> markUserAsInactive(@PathVariable String id) {
     MarkEmployeeAsInactiveCommand command =
@@ -99,6 +105,7 @@ public class EmployeeController {
     return ResponseEntity.ok().build();
   }
 
+  @ManagementOnly
   @GetMapping("/username/{username}")
   public ResponseEntity<EmployeeAuthResponse> getEmployeeByUsername(@PathVariable String username) {
     Optional<Employee> employee =

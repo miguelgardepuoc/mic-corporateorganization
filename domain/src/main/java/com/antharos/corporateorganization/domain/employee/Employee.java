@@ -178,7 +178,7 @@ public class Employee extends AggregateRoot implements UserDetails {
             department,
             salary,
             hiringDate,
-            role != null ? role : Role.EMPLOYEE,
+            role != null ? role : Role.ROLE_EMPLOYEE,
             jobTitle,
             createdBy,
             null,

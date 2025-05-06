@@ -22,7 +22,7 @@ CREATE TABLE "job_title" (
     PRIMARY KEY ("id")
 );
 
-CREATE TYPE role_enum AS ENUM ('COMPANY_MANAGEMENT', 'DEPARTMENT_HEAD', 'EMPLOYEE');
+CREATE TYPE role_enum AS ENUM ('ROLE_COMPANY_MANAGEMENT', 'ROLE_DEPARTMENT_HEAD', 'ROLE_EMPLOYEE');
 
 CREATE TYPE status_enum AS ENUM ('ACTIVE', 'ON_LEAVE', 'TERMINATED', 'INACTIVE');
 
@@ -86,6 +86,8 @@ VALUES
     ('e513050a-a90a-4d3c-b820-113b9e098e52', 'Tech Lead', 'https://imgur.com/KIxjFAE.jpeg', 'admin', CURRENT_DATE, null, null);
 
 INSERT INTO public."employee"
-(id, dni, "name", surname, "role", telephone_number, username, employee_number, department_id, corporate_email, salary, hiring_date, status, job_title_id, created_by, created_at)
+(id, dni, "name", surname, "role", telephone_number, username, password, employee_number, department_id, corporate_email, salary, hiring_date, status, job_title_id, created_by, created_at)
 VALUES
-('e5453fe0-b434-409d-ba9d-b96eb7f22a68', '12345678A', 'John', 'Doe', 'EMPLOYEE'::role_enum, 6653093811, 'jperez', 1, 'a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'john.doe@company.com', 50000, '2023-06-01', 'ACTIVE'::status_enum, 'd8f90d3f-b6a9-4c45-9f4f-951f1d1b9571', 'admin', '2023-06-01 10:00:00');
+('e5453fe0-b434-409d-ba9d-b96eb7f22a68', '12345678A', 'Jorge', 'Pérez', 'ROLE_COMPANY_MANAGEMENT'::role_enum, 6653093811, 'jperez', '$2a$10$dnmhMG1TNVXyslpuk5YlgeZxZxUCsyaYBZ0u5o1R44d0YFFJzogoe', 1, 'a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'john.doe@company.com', 50000, '2023-06-01', 'ACTIVE'::status_enum, 'd8f90d3f-b6a9-4c45-9f4f-951f1d1b9571', 'admin', '2023-06-01 10:00:00'),
+('a123b456-c789-012d-ef34-56789abcdef0', '87654321B', 'Lucía', 'González', 'ROLE_DEPARTMENT_HEAD'::role_enum, 6691122334, 'lgonzalez', '$2a$10$dnmhMG1TNVXyslpuk5YlgeZxZxUCsyaYBZ0u5o1R44d0YFFJzogoe', 2, 'a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'lucia.gonzalez@company.com', 45000, '2023-07-15', 'ACTIVE'::status_enum, 'd8f90d3f-b6a9-4c45-9f4f-951f1d1b9571', 'admin', '2023-07-15 09:30:00'),
+('c789d012-e345-678f-9012-abcdef123456', '11223344C', 'Carlos', 'Ramírez', 'ROLE_EMPLOYEE'::role_enum, 6789012345, 'cramirez', '$2a$10$dnmhMG1TNVXyslpuk5YlgeZxZxUCsyaYBZ0u5o1R44d0YFFJzogoe', 3, 'a4a77bc5-e352-4ac0-8ec3-d3af8271f61f', 'carlos.ramirez@company.com', 60000, '2023-08-20', 'ACTIVE'::status_enum, 'd8f90d3f-b6a9-4c45-9f4f-951f1d1b9571', 'admin', '2023-08-20 08:45:00');
