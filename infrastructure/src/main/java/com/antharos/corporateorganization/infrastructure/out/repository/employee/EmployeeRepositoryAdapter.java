@@ -64,4 +64,9 @@ public class EmployeeRepositoryAdapter implements UserRepository {
         .map(this.mapper::toDomain)
         .toList();
   }
+
+  @Override
+  public Optional<Employee> findById(String id) {
+    return this.employeeJpaRepository.findById(UUID.fromString(id)).map(this.mapper::toDomain);
+  }
 }

@@ -8,10 +8,7 @@ import com.antharos.corporateorganization.application.commands.employee.putonlea
 import com.antharos.corporateorganization.application.commands.employee.putonleave.PutEmployeeOnLeaveCommandHandler;
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommand;
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommandHandler;
-import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQuery;
-import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQueryHandler;
-import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQuery;
-import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQueryHandler;
+import com.antharos.corporateorganization.application.queries.employee.*;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeAuthResponse;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeMapper;
@@ -36,6 +33,7 @@ public class EmployeeController {
   private final HireEmployeeCommandHandler hireEmployeeCommandHandler;
   private final FindEmployeesQueryHandler findEmployeesQueryHandler;
   private final FindEmployeeByUsernameQueryHandler findByUsername;
+  private final FindEmployeeByIdQueryHandler findById;
   private final TerminateEmployeeCommandHandler terminateEmployeeCommandHandler;
   private final PutEmployeeOnLeaveCommandHandler putEmployeeOnLeaveCommandHandler;
   private final MarkEmployeeAsInactiveCommandHandler markEmployeeAsInactiveCommandHandler;
@@ -123,5 +121,17 @@ public class EmployeeController {
     return employee
         .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeAuthResponse(emp)))
         .orElse(ResponseEntity.notFound().build());
+  }
+
+  @ManagementOnly
+  @GetMapping("/{employeeId}")
+  public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable String employeeId) {
+    Optional<Employee> employee =
+            this.findById.handle(
+                    FindEmployeeByIdQuery.builder().id(employeeId).build());
+
+    return employee
+            .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeResponse(emp)))
+            .orElse(ResponseEntity.notFound().build());
   }
 }

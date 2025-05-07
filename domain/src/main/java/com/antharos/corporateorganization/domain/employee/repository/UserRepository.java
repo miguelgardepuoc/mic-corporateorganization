@@ -20,4 +20,6 @@ public interface UserRepository {
   List<Employee> findAll();
 
   List<Employee> findByDepartmentId(DepartmentId departmentId);
+
+  Optional<Employee> findById(String id);
 }
