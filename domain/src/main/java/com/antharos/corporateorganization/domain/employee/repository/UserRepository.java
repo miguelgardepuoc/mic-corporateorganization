@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.domain.employee.repository;
 
+import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface UserRepository {
   Optional<Employee> findTopByOrderByEmployeeNumberDesc();
 
   List<Employee> findAll();
+
+  List<Employee> findByDepartmentId(DepartmentId departmentId);
 }

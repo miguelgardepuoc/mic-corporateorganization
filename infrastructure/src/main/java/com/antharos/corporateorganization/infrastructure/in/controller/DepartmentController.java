@@ -28,7 +28,6 @@ public class DepartmentController {
   private final RenameDepartmentCommandHandler renameDepartmentCommandHandler;
   private final DisableDepartmentCommandHandler disableDepartmentCommandHandler;
   private final CreateDepartmentCommandHandler createDepartmentCommandHandler;
-  private final AuditorUtils auditorUtils;
   private final DepartmentMapper departmentMapper;
 
   @ManagementOnly
@@ -47,7 +46,7 @@ public class DepartmentController {
         RenameDepartmentCommand.builder()
             .departmentId(id)
             .description(request.getDescription())
-            .user(this.auditorUtils.getCurrentUsername())
+            .user(AuditorUtils.getCurrentUsername())
             .build();
     this.renameDepartmentCommandHandler.handle(command);
     return ResponseEntity.noContent().build();
@@ -68,7 +67,7 @@ public class DepartmentController {
         CreateDepartmentCommand.builder()
             .id(request.id())
             .description(request.description())
-            .createdBy(this.auditorUtils.getCurrentUsername())
+            .createdBy(AuditorUtils.getCurrentUsername())
             .build();
 
     this.createDepartmentCommandHandler.doHandle(command);

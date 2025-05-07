@@ -1,18 +1,15 @@
 package com.antharos.corporateorganization.infrastructure.in.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-@Component
 public class AuditorUtils {
 
-  public String getCurrentUsername() {
+  public static String getCurrentUsername() {
+
     var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (authentication != null
-        && authentication.getPrincipal() instanceof UserDetails userDetails) {
-      return userDetails.getUsername();
+    if (authentication != null) {
+      return authentication.getPrincipal().toString();
     }
 
     return "admin";

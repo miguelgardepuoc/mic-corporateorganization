@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.infrastructure.out.repository.employee;
 
+import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
@@ -53,5 +54,14 @@ public class EmployeeRepositoryAdapter implements UserRepository {
   @Override
   public List<Employee> findAll() {
     return this.employeeJpaRepository.findAll().stream().map(this.mapper::toDomain).toList();
+  }
+
+  @Override
+  public List<Employee> findByDepartmentId(DepartmentId departmentId) {
+    return this.employeeJpaRepository
+        .findByDepartmentId(UUID.fromString(departmentId.getValueAsString()))
+        .stream()
+        .map(this.mapper::toDomain)
+        .toList();
   }
 }

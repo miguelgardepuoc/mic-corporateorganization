@@ -10,6 +10,7 @@ import com.antharos.corporateorganization.application.commands.employee.terminat
 import com.antharos.corporateorganization.application.commands.employee.terminate.TerminateEmployeeCommandHandler;
 import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQuery;
 import com.antharos.corporateorganization.application.queries.employee.FindEmployeeByUsernameQueryHandler;
+import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQuery;
 import com.antharos.corporateorganization.application.queries.employee.FindEmployeesQueryHandler;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.EmployeeAuthResponse;
@@ -18,11 +19,13 @@ import com.antharos.corporateorganization.infrastructure.in.dto.employee.Employe
 import com.antharos.corporateorganization.infrastructure.in.dto.employee.HireEmployeeRequest;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
 import com.antharos.corporateorganization.infrastructure.security.ManagementOnly;
+import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +39,6 @@ public class EmployeeController {
   private final TerminateEmployeeCommandHandler terminateEmployeeCommandHandler;
   private final PutEmployeeOnLeaveCommandHandler putEmployeeOnLeaveCommandHandler;
   private final MarkEmployeeAsInactiveCommandHandler markEmployeeAsInactiveCommandHandler;
-  private final AuditorUtils auditorUtils;
   private final EmployeeMapper employeeMapper;
 
   @ManagementOnly
@@ -54,7 +56,7 @@ public class EmployeeController {
             .hiringDate(request.hiringDate())
             .role(request.role())
             .jobTitleId(request.jobTitleId())
-            .createdBy(this.auditorUtils.getCurrentUsername())
+            .createdBy(AuditorUtils.getCurrentUsername())
             .build();
 
     this.hireEmployeeCommandHandler.doHandle(command);
@@ -63,10 +65,16 @@ public class EmployeeController {
 
   @ManagementOnly
   @GetMapping
-  public ResponseEntity<List<EmployeeResponse>> findEmployees() {
+  public ResponseEntity<List<EmployeeResponse>> findEmployees(Authentication authentication) {
     return ResponseEntity.ok(
         this.employeeMapper.toEmployeeResponse(
-            this.findEmployeesQueryHandler.handle().stream().toList()));
+            this.findEmployeesQueryHandler
+                .handle(
+                    FindEmployeesQuery.builder()
+                        .username(AuditorUtils.getCurrentUsername())
+                        .build())
+                .stream()
+                .toList()));
   }
 
   @ManagementOnly
@@ -75,7 +83,7 @@ public class EmployeeController {
     PutEmployeeOnLeaveCommand command =
         PutEmployeeOnLeaveCommand.builder()
             .userId(id)
-            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .modificationUser(AuditorUtils.getCurrentUsername())
             .build();
     this.putEmployeeOnLeaveCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
@@ -87,7 +95,7 @@ public class EmployeeController {
     TerminateEmployeeCommand command =
         TerminateEmployeeCommand.builder()
             .userId(id)
-            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .modificationUser(AuditorUtils.getCurrentUsername())
             .build();
     this.terminateEmployeeCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
@@ -99,13 +107,13 @@ public class EmployeeController {
     MarkEmployeeAsInactiveCommand command =
         MarkEmployeeAsInactiveCommand.builder()
             .userId(id)
-            .modificationUser(this.auditorUtils.getCurrentUsername())
+            .modificationUser(AuditorUtils.getCurrentUsername())
             .build();
     this.markEmployeeAsInactiveCommandHandler.doHandle(command);
     return ResponseEntity.ok().build();
   }
 
-  @ManagementOnly
+  @PermitAll
   @GetMapping("/username/{username}")
   public ResponseEntity<EmployeeAuthResponse> getEmployeeByUsername(@PathVariable String username) {
     Optional<Employee> employee =
