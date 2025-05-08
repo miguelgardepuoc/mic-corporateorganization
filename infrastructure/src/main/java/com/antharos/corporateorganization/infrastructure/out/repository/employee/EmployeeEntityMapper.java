@@ -6,6 +6,7 @@ import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitleId;
+import com.antharos.corporateorganization.infrastructure.out.repository.department.DepartmentEntity;
 import com.antharos.corporateorganization.infrastructure.out.repository.department.DepartmentEntityMapper;
 import com.antharos.corporateorganization.infrastructure.out.repository.jobtitle.JobTitleEntityMapper;
 import java.util.UUID;
@@ -60,7 +61,8 @@ public interface EmployeeEntityMapper {
     entity.setCreatedAt(domain.getCreatedAt());
     entity.setLastModifiedBy(domain.getLastModifiedBy());
     entity.setLastModifiedAt(domain.getLastModifiedAt());
-    entity.setDepartment(departmentEntityMapper.toEntity(domain.getDepartment()));
+    entity.setDepartment(
+        new DepartmentEntity(UUID.fromString(domain.getDepartment().getId().getValueAsString())));
     entity.setJobTitle(jobTitleEntityMapper.toEntity(domain.getJobTitle()));
     return entity;
   }

@@ -1,5 +1,8 @@
 package com.antharos.corporateorganization.domain.employee;
 
+import static com.antharos.corporateorganization.domain.employee.Role.ROLE_DEPARTMENT_HEAD;
+import static com.antharos.corporateorganization.domain.employee.Role.ROLE_EMPLOYEE;
+
 import com.antharos.corporateorganization.domain.dddbase.AggregateRoot;
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.employee.event.EmployeeHiredEvent;
@@ -178,7 +181,7 @@ public class Employee extends AggregateRoot implements UserDetails {
             department,
             salary,
             hiringDate,
-            role != null ? role : Role.ROLE_EMPLOYEE,
+            role != null ? role : ROLE_EMPLOYEE,
             jobTitle,
             createdBy,
             null,
@@ -236,6 +239,16 @@ public class Employee extends AggregateRoot implements UserDetails {
     this.lastModifiedBy = modificationUser;
     eventProducer.sendEmployeeMarkedAsInactiveEvent(this);
     this.addDomainEvent(new EmployeeMarkedAsInactiveEvent(this));
+  }
+
+  public void changeToDepartmentHead(final String modificationUser) {
+    this.role = ROLE_DEPARTMENT_HEAD;
+    this.lastModifiedBy = modificationUser;
+  }
+
+  public void changeToEmployee(final String modificationUser) {
+    this.role = ROLE_EMPLOYEE;
+    this.lastModifiedBy = modificationUser;
   }
 
   @Override

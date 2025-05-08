@@ -127,11 +127,10 @@ public class EmployeeController {
   @GetMapping("/{employeeId}")
   public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable String employeeId) {
     Optional<Employee> employee =
-            this.findById.handle(
-                    FindEmployeeByIdQuery.builder().id(employeeId).build());
+        this.findById.handle(FindEmployeeByIdQuery.builder().id(employeeId).build());
 
     return employee
-            .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeResponse(emp)))
-            .orElse(ResponseEntity.notFound().build());
+        .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeResponse(emp)))
+        .orElse(ResponseEntity.notFound().build());
   }
 }

@@ -4,13 +4,12 @@ import com.antharos.corporateorganization.application.commands.department.create
 import com.antharos.corporateorganization.application.commands.department.create.CreateDepartmentCommandHandler;
 import com.antharos.corporateorganization.application.commands.department.disable.DisableDepartmentCommand;
 import com.antharos.corporateorganization.application.commands.department.disable.DisableDepartmentCommandHandler;
+import com.antharos.corporateorganization.application.commands.department.headedit.EditHeadDepartmentCommand;
+import com.antharos.corporateorganization.application.commands.department.headedit.EditHeadDepartmentCommandHandler;
 import com.antharos.corporateorganization.application.commands.department.rename.RenameDepartmentCommand;
 import com.antharos.corporateorganization.application.commands.department.rename.RenameDepartmentCommandHandler;
 import com.antharos.corporateorganization.application.queries.department.FindDepartmentsQueryHandler;
-import com.antharos.corporateorganization.infrastructure.in.dto.department.CreateDepartmentRequest;
-import com.antharos.corporateorganization.infrastructure.in.dto.department.DepartmentMapper;
-import com.antharos.corporateorganization.infrastructure.in.dto.department.DepartmentResponse;
-import com.antharos.corporateorganization.infrastructure.in.dto.department.RenameDepartmentRequest;
+import com.antharos.corporateorganization.infrastructure.in.dto.department.*;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
 import com.antharos.corporateorganization.infrastructure.security.ManagementOnly;
 import java.util.List;
@@ -28,6 +27,7 @@ public class DepartmentController {
   private final RenameDepartmentCommandHandler renameDepartmentCommandHandler;
   private final DisableDepartmentCommandHandler disableDepartmentCommandHandler;
   private final CreateDepartmentCommandHandler createDepartmentCommandHandler;
+  private final EditHeadDepartmentCommandHandler editHeadDepartmentCommandHandler;
   private final DepartmentMapper departmentMapper;
 
   @ManagementOnly
@@ -72,5 +72,20 @@ public class DepartmentController {
 
     this.createDepartmentCommandHandler.doHandle(command);
     return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+
+  @ManagementOnly
+  @PutMapping("/{id}/head")
+  public ResponseEntity<Void> updateDepartmentHead(
+      @PathVariable String id, @RequestBody UpdateDepartmentHeadRequest request) {
+    EditHeadDepartmentCommand command =
+        EditHeadDepartmentCommand.builder()
+            .id(id)
+            .createdBy(AuditorUtils.getCurrentUsername())
+            .username(request.username())
+            .build();
+
+    this.editHeadDepartmentCommandHandler.handle(command);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

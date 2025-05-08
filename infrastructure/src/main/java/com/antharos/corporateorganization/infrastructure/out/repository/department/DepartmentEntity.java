@@ -40,6 +40,10 @@ public class DepartmentEntity {
 
   private LocalDate lastModifiedAt;
 
+  public DepartmentEntity(UUID id) {
+    this.id = id;
+  }
+
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDate.now();
