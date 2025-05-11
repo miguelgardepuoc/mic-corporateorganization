@@ -1,31 +1,65 @@
-# mic-corporateorganization
+# Antharos Corporate Organization Domain Service
 
-**mic-corporateorganization** is a Java-based microservice designed to manage the lifecycle of company employees, employee accounts, and departments. It ensures efficient data handling and seamless integration within a microservices architecture.
+## Overview
+
+The Corporate Organization domain service is a core microservice within the Antharos HR platform ecosystem. It manages the company's employees, departments, job titles and user credentials. This service is built using Domain-Driven Design (DDD) principles and follows a hexagonal architecture pattern.
+
+## Domain Model
+
+The service is centered around the following core domain concepts:
+
+- **Department**: Organizational units with specific functions (e.g., Technology, Marketing)
+- **JobTitle**: Job titles (e.g., Tech Lead, Product Manager)
+- **Employee**: Staff members assigned to positions within departments
+
+## Technology Stack
+
+- **Framework**: Spring Boot 3.4
+- **Build Tool**: Maven
+- **Language**: Java 21
+- **Architecture**: Hexagonal Architecture with DDD
+- **Database**: PostgreSQL
+- **Event Bus**: Azure Service Bus
+
+## Domain Events
+
+The service publishes the following domain events:
+- `EmployeeHired`
+- `EmployeeOnLeave`
+- `EmployeeTerminated`
+- `EmployeeMarkedAsInactive`
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
-- Java 21+ (for local development)
-- Maven (for building the project locally)
+- JDK 21+
+- Maven 3.9+
+- PostgreSQL 14+
+- Docker & Docker Compose
 
-### Running with Docker
+### Installation
 
-To run the service using Docker containers:
+```bash
+# Clone the repository
+git clone https://github.com/miguelgardepuoc/mic-corporateorganization.git
+cd mic-corporateorganization
 
-1. Create a shared Docker network:
+# Build the project
+./mvnw clean install -U
+```
 
-   ```bash
-   docker network create shared-network
-   ```
-2. Build and start the containers:
+### Running Locally
 
-    ```bash
-   docker-compose up --build -d --remove-orphans
-   ```
-3. To stop and remove the containers:
+```bash
+# Start all dependencies with Docker Compose
+docker-compose up --build -d --remove-orphans
+```
 
-    ```bash
-   docker-compose down
-   ```
+```bash
+# Run the service
+mvn spring-boot:run
+```
+
+The service will be available at `http://localhost:8086/corporate-organization`.
+APIs documentation will be available at `http://localhost:8086/corporate-organization/swagger-ui/index.html`.

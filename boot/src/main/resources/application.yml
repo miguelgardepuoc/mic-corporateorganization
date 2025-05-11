@@ -1,6 +1,10 @@
 server:
   port: 8086
 spring:
+  data:
+    rest:
+      base-path: /none
+      detection-strategy: annotated
   application:
     name: mic-corporateorganization
   mvc:
