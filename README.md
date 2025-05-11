@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Corporate Organization domain service is a core microservice within the Antharos HR platform ecosystem. It manages the company's employees, departments, job titles and user credentials. This service is built using Domain-Driven Design (DDD) principles and follows a hexagonal architecture pattern.
+The Corporate Organization domain service is a core microservice within the Antharos HR platform ecosystem. It manages the company's employees, departments, job titles and user credentials. This service is built using Domain-Driven Design (DDD) principles and follows CQRS and hexagonal architecture pattern.
 
 ## Domain Model
 
@@ -17,7 +17,7 @@ The service is centered around the following core domain concepts:
 - **Framework**: Spring Boot 3.4
 - **Build Tool**: Maven
 - **Language**: Java 21
-- **Architecture**: Hexagonal Architecture with DDD
+- **Architecture**: Hexagonal Architecture with CQRS and DDD
 - **Database**: PostgreSQL
 - **Event Bus**: Azure Service Bus
 
