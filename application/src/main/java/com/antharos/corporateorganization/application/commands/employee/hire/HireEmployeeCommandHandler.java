@@ -2,8 +2,8 @@ package com.antharos.corporateorganization.application.commands.employee.hire;
 
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
-import com.antharos.corporateorganization.domain.department.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.department.DepartmentRepository;
+import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeAlreadyExists;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;

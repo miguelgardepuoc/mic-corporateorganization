@@ -18,7 +18,7 @@ public class SignUpCommandHandler {
         this.userRepository
             .findByUsername(command.getUsername())
             .orElseThrow(() -> new BadCredentialsException(command.getUsername()));
-    employee.signup(this.passwordEncoder.encode(command.getPassword()));
+    employee.signup(this.passwordEncoder.encode(command.getPassword()), command.getUsername());
 
     this.userRepository.save(employee);
   }

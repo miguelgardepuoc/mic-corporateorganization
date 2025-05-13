@@ -26,6 +26,7 @@
         <module>application</module>
         <module>infrastructure</module>
         <module>boot</module>
+        <module>aggregate-report</module>
     </modules>
 
     <properties>
@@ -45,7 +46,7 @@
         <maven.compiler.plugin.version>3.9.0</maven.compiler.plugin.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
         <maven.puppycrawl.version>10.21.4</maven.puppycrawl.version>
-        <jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
+        <jacoco.maven.plugin.version>0.8.13</jacoco.maven.plugin.version>
         <spotless.maven.plugin.version>2.44.3</spotless.maven.plugin.version>
         <google.java.format.version>1.26.0</google.java.format.version>
     </properties>
@@ -132,9 +133,20 @@
         </dependencies>
     </dependencyManagement>
 
-
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -183,37 +195,10 @@
     </build>
 
     <profiles>
-        <!-- Use this profile to measure the code coverage with JaCoCo -->
-        <profile>
-            <id>test-coverage</id>
-            <build>
-                <plugins>
-                    <!-- Measure code coverage with JaCoCo -->
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco.maven.plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <!-- Do not create a report for every single module.
-                                 Instead, we'll create an *aggregated* report in the "boot" module. -->
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Use this profile to run a static code analysis with Checkstyle -->
         <profile>
             <id>code-analysis</id>
             <build>
                 <plugins>
-                    <!-- Validate code style with Checkstyle -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>

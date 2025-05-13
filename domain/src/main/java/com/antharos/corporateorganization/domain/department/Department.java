@@ -3,6 +3,8 @@ package com.antharos.corporateorganization.domain.department;
 import static com.antharos.corporateorganization.domain.employee.Role.ROLE_EMPLOYEE;
 import static com.antharos.corporateorganization.domain.employee.Status.ACTIVE;
 
+import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
+import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;

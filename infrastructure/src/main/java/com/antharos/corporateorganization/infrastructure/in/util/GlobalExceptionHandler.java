@@ -1,7 +1,7 @@
 package com.antharos.corporateorganization.infrastructure.in.util;
 
-import com.antharos.corporateorganization.domain.department.NotActiveUserException;
-import com.antharos.corporateorganization.domain.department.NotEmployeeException;
+import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
+import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.exception.*;
 import com.antharos.corporateorganization.domain.globalexceptions.AlreadyExistsException;
 import com.antharos.corporateorganization.domain.globalexceptions.NotFoundException;

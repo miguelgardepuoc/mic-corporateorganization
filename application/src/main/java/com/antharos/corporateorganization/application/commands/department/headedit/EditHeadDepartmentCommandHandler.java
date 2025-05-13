@@ -2,12 +2,12 @@ package com.antharos.corporateorganization.application.commands.department.heade
 
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
-import com.antharos.corporateorganization.domain.department.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.department.DepartmentRepository;
+import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.domain.employee.exception.UsernameNotFoundException;
 import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @AllArgsConstructor

@@ -1,9 +1,9 @@
 package com.antharos.corporateorganization.application.commands.department.create;
 
 import com.antharos.corporateorganization.domain.department.Department;
-import com.antharos.corporateorganization.domain.department.DepartmentAlreadyExists;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.department.DepartmentRepository;
+import com.antharos.corporateorganization.domain.department.exception.DepartmentAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class CreateDepartmentCommandHandler {
         .findBy(departmentId)
         .ifPresent(
             existing -> {
-              throw new DepartmentAlreadyExists();
+              throw new DepartmentAlreadyExistsException();
             });
 
     Department newDepartment =

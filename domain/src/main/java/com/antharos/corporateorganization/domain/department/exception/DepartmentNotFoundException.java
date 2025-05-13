@@ -1,4 +1,4 @@
-package com.antharos.corporateorganization.domain.department;
+package com.antharos.corporateorganization.domain.department.exception;
 
 import com.antharos.corporateorganization.domain.globalexceptions.NotFoundException;
 

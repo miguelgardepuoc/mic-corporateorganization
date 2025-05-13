@@ -61,31 +61,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>test-coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>report-aggregate</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>report-aggregate</goal>
-                                </goals>
-                                <configuration>
-                                    <formats>XML</formats>
-                                    <includeCurrentProject>true</includeCurrentProject>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>

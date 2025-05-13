@@ -2,8 +2,8 @@ package com.antharos.corporateorganization.application.commands.department.disab
 
 import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
-import com.antharos.corporateorganization.domain.department.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.department.DepartmentRepository;
+import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

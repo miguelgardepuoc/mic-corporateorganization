@@ -4,11 +4,11 @@ import static com.antharos.corporateorganization.domain.employee.Role.ROLE_DEPAR
 
 import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.employee.Employee;
+import com.antharos.corporateorganization.domain.employee.exception.UsernameNotFoundException;
 import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
