@@ -1,11 +1,13 @@
 package com.antharos.corporateorganization.domain.department;
 
+import static com.antharos.corporateorganization.domain.employee.Role.ROLE_DEPARTMENT_HEAD;
 import static com.antharos.corporateorganization.domain.employee.Role.ROLE_EMPLOYEE;
 import static com.antharos.corporateorganization.domain.employee.Status.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
+import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
@@ -72,6 +74,22 @@ class DepartmentUnitTest {
 
     assertThrows(
         NotActiveUserException.class,
+        () -> department.updateDepartmentHead(employee, modifier, userRepository));
+  }
+
+  @Test
+  void whenNotEmployeeRole_thenThrowNotEmployeeException() {
+    Employee employee = mock(Employee.class);
+    when(employee.getUsername()).thenReturn("oldHead");
+    when(employee.getStatus()).thenReturn(ACTIVE);
+    when(employee.getRole()).thenReturn(ROLE_DEPARTMENT_HEAD);
+
+    UserRepository userRepository = mock(UserRepository.class);
+
+    department = new Department(departmentId, "Dept", true, createdBy);
+
+    assertThrows(
+        NotEmployeeException.class,
         () -> department.updateDepartmentHead(employee, modifier, userRepository));
   }
 

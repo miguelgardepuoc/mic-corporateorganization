@@ -193,9 +193,9 @@ public class EmployeeController {
         @ApiResponse(responseCode = "404", description = "Employee not found"),
         @ApiResponse(responseCode = "403", description = "Forbidden")
       })
-  public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable String employeeId) {
+  public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable String id) {
     Optional<Employee> employee =
-        this.findById.handle(FindEmployeeByIdQuery.builder().id(employeeId).build());
+        this.findById.handle(FindEmployeeByIdQuery.builder().id(id).build());
 
     return employee
         .map(emp -> ResponseEntity.ok(this.employeeMapper.toEmployeeResponse(emp)))
