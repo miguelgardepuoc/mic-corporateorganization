@@ -17,7 +17,7 @@ spring:
         stores:
           - connection-string: Endpoint=https://antharos.azconfig.io;Id=AKFK;Secret=534mY24MYAT0bp1qkt9IzuG2UzG4uKAt3m1jnWJIaUBk7gsd8O0HJQQJ99BEACR0EKYq1LXGAAACAZAC24W6
   datasource:
-    url: jdbc:postgresql://corporateorganization.postgres.database.azure.com:5432/corporate_organization
+    url: jdbc:postgresql://corporateorganization.postgres.database.azure.com:5432/postgres
     username: antharosadmin
     password: "@passw0rd"
     driver-class-name: org.postgresql.Driver
