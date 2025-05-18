@@ -3,10 +3,11 @@ package com.antharos.corporateorganization.domain.department;
 import static com.antharos.corporateorganization.domain.employee.Role.ROLE_EMPLOYEE;
 import static com.antharos.corporateorganization.domain.employee.Status.ACTIVE;
 
+import com.antharos.corporateorganization.domain.department.exception.DepartmentHasActiveEmployeesException;
 import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
 import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.Employee;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -57,9 +58,12 @@ public class Department {
     this.lastModifiedBy = user;
   }
 
-  public void remove(String user) {
+  public void remove(String user, EmployeeRepository employeeRepository) {
     if (!isActive()) {
       throw new ConflictException();
+    }
+    if (employeeRepository.hasActiveEmployeesByDepartmentId(this.getId())) {
+      throw new DepartmentHasActiveEmployeesException(this.getId().getValueAsString());
     }
     this.isActive = false;
     this.lastModifiedBy = user;
@@ -70,7 +74,7 @@ public class Department {
   }
 
   public void updateDepartmentHead(
-      Employee departmentHead, String user, UserRepository userRepository) {
+      Employee departmentHead, String user, EmployeeRepository employeeRepository) {
     if (!isActive()) {
       throw new ConflictException();
     }
@@ -81,7 +85,7 @@ public class Department {
       throw new NotEmployeeException();
     }
     if (this.departmentHead != null) {
-      Optional<Employee> e = userRepository.findByUsername(this.departmentHead.getUsername());
+      Optional<Employee> e = employeeRepository.findByUsername(this.departmentHead.getUsername());
       e.ifPresent(employee -> employee.changeToEmployee(user));
     }
     departmentHead.changeToDepartmentHead(user);

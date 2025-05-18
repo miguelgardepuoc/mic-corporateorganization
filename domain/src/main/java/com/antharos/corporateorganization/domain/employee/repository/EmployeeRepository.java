@@ -6,7 +6,7 @@ import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+public interface EmployeeRepository {
   Optional<Employee> findBy(EmployeeId employeeId);
 
   Optional<Employee> findByUsername(String username);
@@ -20,6 +20,8 @@ public interface UserRepository {
   List<Employee> findAll();
 
   List<Employee> findByDepartmentId(DepartmentId departmentId);
+
+  boolean hasActiveEmployeesByDepartmentId(DepartmentId departmentId);
 
   Optional<Employee> findById(String id);
 }

@@ -3,8 +3,8 @@ package com.antharos.corporateorganization.application.commands.employee.markasi
 import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.event.EmployeeMarkedAsInactiveEvent;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeNotFoundException;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MarkEmployeeAsInactiveCommandHandler {
 
-  private final UserRepository userRepository;
+  private final EmployeeRepository employeeRepository;
 
   private final EventProducer eventProducer;
 
@@ -21,12 +21,12 @@ public class MarkEmployeeAsInactiveCommandHandler {
     final EmployeeId employeeId = EmployeeId.of(command.getUserId());
 
     Employee employee =
-        this.userRepository
+        this.employeeRepository
             .findBy(employeeId)
             .orElseThrow(() -> new EmployeeNotFoundException(command.getUserId()));
 
     employee.markAsInactive(command.getModificationUser(), eventProducer);
-    this.userRepository.save(employee);
+    this.employeeRepository.save(employee);
 
     for (Object event : employee.getDomainEvents()) {
       if (event instanceof EmployeeMarkedAsInactiveEvent(Employee newEmployee)) {

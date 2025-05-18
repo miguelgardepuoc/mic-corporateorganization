@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.antharos.corporateorganization.domain.department.Department;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
@@ -19,18 +19,18 @@ import org.junit.jupiter.api.Test;
 
 class EmployeeUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private EventProducer eventProducer;
 
   @BeforeEach
   void setUp() {
-    userRepository = mock(UserRepository.class);
+    employeeRepository = mock(EmployeeRepository.class);
     eventProducer = mock(EventProducer.class);
   }
 
   @Test
   void whenHireNewEmployee_thenUsernameAndEmailAreGenerated() {
-    when(userRepository.usernameExists("jdoe")).thenReturn(false);
+    when(employeeRepository.usernameExists("jdoe")).thenReturn(false);
 
     Employee employee =
         Employee.hire(
@@ -46,7 +46,7 @@ class EmployeeUnitTest {
             ROLE_EMPLOYEE,
             mock(JobTitle.class),
             "admin",
-            userRepository);
+            employeeRepository);
 
     assertNotNull(employee.getUsername());
     assertEquals(employee.getUsername() + "@antharos.com", employee.getCorporateEmail());
@@ -55,7 +55,7 @@ class EmployeeUnitTest {
 
   @Test
   void whenHireNewEmployeeWithoutRole_thenUsernameAndEmailAreGenerated() {
-    when(userRepository.usernameExists("jdoe")).thenReturn(false);
+    when(employeeRepository.usernameExists("jdoe")).thenReturn(false);
 
     Employee employee =
         Employee.hire(
@@ -71,7 +71,7 @@ class EmployeeUnitTest {
             null,
             mock(JobTitle.class),
             "admin",
-            userRepository);
+            employeeRepository);
 
     assertNotNull(employee.getUsername());
     assertEquals(employee.getUsername() + "@antharos.com", employee.getCorporateEmail());
@@ -80,7 +80,7 @@ class EmployeeUnitTest {
 
   @Test
   void whenHireWithConflictingUsername_thenRandomSuffixIsAdded() {
-    when(userRepository.usernameExists("jdoe")).thenReturn(true);
+    when(employeeRepository.usernameExists("jdoe")).thenReturn(true);
 
     Employee employee =
         Employee.hire(
@@ -96,7 +96,7 @@ class EmployeeUnitTest {
             ROLE_EMPLOYEE,
             mock(JobTitle.class),
             "admin",
-            userRepository);
+            employeeRepository);
 
     assertTrue(employee.getUsername().startsWith("jdoe"));
     assertTrue(employee.getUsername().length() > "jdoe".length());

@@ -6,10 +6,11 @@ import static com.antharos.corporateorganization.domain.employee.Status.ACTIVE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.antharos.corporateorganization.domain.department.exception.DepartmentHasActiveEmployeesException;
 import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
 import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.Employee;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 class DepartmentUnitTest {
 
+  private EmployeeRepository employeeRepository;
   private DepartmentId departmentId;
   private Department department;
   private final String createdBy = "admin";
@@ -27,6 +29,7 @@ class DepartmentUnitTest {
   void setUp() {
     departmentId = DepartmentId.of(UUID.randomUUID().toString());
     department = Department.create(departmentId, "Initial Desc", createdBy);
+    employeeRepository = mock(EmployeeRepository.class);
   }
 
   @Test
@@ -38,43 +41,53 @@ class DepartmentUnitTest {
 
   @Test
   void whenRenameOnInactiveDepartment_thenThrowConflictException() {
-    department.remove(modifier);
+    department.remove(modifier, this.employeeRepository);
     assertThrows(ConflictException.class, () -> department.rename("Name", modifier));
   }
 
   @Test
+  void whenRemoveOnInactiveDepartment_thenThrowConflictException() {
+    department.remove(modifier, this.employeeRepository);
+    assertThrows(
+        ConflictException.class, () -> department.remove(modifier, this.employeeRepository));
+  }
+
+  @Test
   void whenRemoveOnActiveDepartment_thenIsActiveBecomesFalse() {
-    department.remove(modifier);
+    when(employeeRepository.hasActiveEmployeesByDepartmentId(departmentId)).thenReturn(false);
+    department.remove(modifier, this.employeeRepository);
     assertFalse(department.isActive());
     assertEquals(modifier, department.getLastModifiedBy());
   }
 
   @Test
-  void whenRemoveOnInactiveDepartment_thenThrowConflictException() {
-    department.remove(modifier);
-    assertThrows(ConflictException.class, () -> department.remove(modifier));
+  void whenRemoveDepartmentWithActiveEmployees_thenThrowException() {
+    when(employeeRepository.hasActiveEmployeesByDepartmentId(departmentId)).thenReturn(true);
+    assertThrows(
+        DepartmentHasActiveEmployeesException.class,
+        () -> department.remove(modifier, this.employeeRepository));
   }
 
   @Test
   void whenUpdateDepartmentHeadWithInactiveDepartment_thenThrowConflictException() {
-    department.remove(modifier);
+    department.remove(modifier, this.employeeRepository);
 
     Employee employee = mock(Employee.class);
-    UserRepository userRepository = mock(UserRepository.class);
+    EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
 
     assertThrows(
         ConflictException.class,
-        () -> department.updateDepartmentHead(employee, modifier, userRepository));
+        () -> department.updateDepartmentHead(employee, modifier, employeeRepository));
   }
 
   @Test
   void whenUpdateDepartmentHeadWithInactiveEmployee_thenThrowNotActiveUserException() {
     Employee employee = mock(Employee.class);
-    UserRepository userRepository = mock(UserRepository.class);
+    EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
 
     assertThrows(
         NotActiveUserException.class,
-        () -> department.updateDepartmentHead(employee, modifier, userRepository));
+        () -> department.updateDepartmentHead(employee, modifier, employeeRepository));
   }
 
   @Test
@@ -84,13 +97,13 @@ class DepartmentUnitTest {
     when(employee.getStatus()).thenReturn(ACTIVE);
     when(employee.getRole()).thenReturn(ROLE_DEPARTMENT_HEAD);
 
-    UserRepository userRepository = mock(UserRepository.class);
+    EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
 
     department = new Department(departmentId, "Dept", true, createdBy);
 
     assertThrows(
         NotEmployeeException.class,
-        () -> department.updateDepartmentHead(employee, modifier, userRepository));
+        () -> department.updateDepartmentHead(employee, modifier, employeeRepository));
   }
 
   @Test
@@ -101,17 +114,17 @@ class DepartmentUnitTest {
     when(oldHead.getRole()).thenReturn(ROLE_EMPLOYEE);
 
     department = new Department(departmentId, "Dept", true, createdBy);
-    department.updateDepartmentHead(oldHead, modifier, mock(UserRepository.class));
+    department.updateDepartmentHead(oldHead, modifier, mock(EmployeeRepository.class));
 
     Employee newHead = mock(Employee.class);
     when(newHead.getUsername()).thenReturn("newHead");
     when(newHead.getStatus()).thenReturn(ACTIVE);
     when(newHead.getRole()).thenReturn(ROLE_EMPLOYEE);
 
-    UserRepository userRepository = mock(UserRepository.class);
-    when(userRepository.findByUsername("oldHead")).thenReturn(Optional.of(oldHead));
+    EmployeeRepository employeeRepository = mock(EmployeeRepository.class);
+    when(employeeRepository.findByUsername("oldHead")).thenReturn(Optional.of(oldHead));
 
-    department.updateDepartmentHead(newHead, modifier, userRepository);
+    department.updateDepartmentHead(newHead, modifier, employeeRepository);
 
     verify(oldHead).changeToEmployee(modifier);
     verify(newHead).changeToDepartmentHead(modifier);

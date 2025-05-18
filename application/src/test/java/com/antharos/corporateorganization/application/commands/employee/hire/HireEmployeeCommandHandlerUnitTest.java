@@ -9,8 +9,8 @@ import com.antharos.corporateorganization.domain.department.DepartmentRepository
 import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeAlreadyExists;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import com.antharos.corporateorganization.domain.employee.valueobject.Name;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
@@ -27,7 +27,7 @@ import org.mockito.ArgumentCaptor;
 
 class HireEmployeeCommandHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private DepartmentRepository departmentRepository;
   private JobTitleRepository jobTitleRepository;
   private EventProducer eventProducer;
@@ -35,13 +35,13 @@ class HireEmployeeCommandHandlerUnitTest {
 
   @BeforeEach
   void setUp() {
-    this.userRepository = mock(UserRepository.class);
+    this.employeeRepository = mock(EmployeeRepository.class);
     this.departmentRepository = mock(DepartmentRepository.class);
     this.jobTitleRepository = mock(JobTitleRepository.class);
     this.eventProducer = mock(EventProducer.class);
     this.commandHandler =
         new HireEmployeeCommandHandler(
-            userRepository, departmentRepository, jobTitleRepository, eventProducer);
+            employeeRepository, departmentRepository, jobTitleRepository, eventProducer);
   }
 
   @Test
@@ -64,11 +64,11 @@ class HireEmployeeCommandHandlerUnitTest {
 
     EmployeeId employeeId = EmployeeId.of(command.getUserId());
 
-    when(userRepository.findBy(employeeId)).thenReturn(Optional.of(mock(Employee.class)));
+    when(employeeRepository.findBy(employeeId)).thenReturn(Optional.of(mock(Employee.class)));
 
     assertThrows(EmployeeAlreadyExists.class, () -> commandHandler.doHandle(command));
 
-    verify(userRepository, times(1)).findBy(employeeId);
+    verify(employeeRepository, times(1)).findBy(employeeId);
   }
 
   @Test
@@ -148,19 +148,20 @@ class HireEmployeeCommandHandlerUnitTest {
     JobTitle mockJobTitle = mock(JobTitle.class);
     Employee mockEmployee = Employee.builder().name(new Name("random")).build();
 
-    when(userRepository.findBy(any(EmployeeId.class))).thenReturn(Optional.empty());
+    when(employeeRepository.findBy(any(EmployeeId.class))).thenReturn(Optional.empty());
 
     when(departmentRepository.findBy(any(DepartmentId.class)))
         .thenReturn(Optional.of(mockDepartment));
 
     when(jobTitleRepository.findBy(any(JobTitleId.class))).thenReturn(Optional.of(mockJobTitle));
 
-    when(userRepository.findTopByOrderByEmployeeNumberDesc()).thenReturn(Optional.of(mockEmployee));
+    when(employeeRepository.findTopByOrderByEmployeeNumberDesc())
+        .thenReturn(Optional.of(mockEmployee));
 
     commandHandler.doHandle(command);
 
     ArgumentCaptor<Employee> employeeCaptor = ArgumentCaptor.forClass(Employee.class);
-    verify(userRepository, times(1)).save(employeeCaptor.capture());
+    verify(employeeRepository, times(1)).save(employeeCaptor.capture());
 
     assertNotNull(employeeCaptor.getValue());
     verify(eventProducer, times(1)).sendEmployeeHiredEvent(any());
@@ -183,16 +184,16 @@ class HireEmployeeCommandHandlerUnitTest {
             .createdBy("admin")
             .build();
 
-    when(userRepository.findBy(any(EmployeeId.class))).thenReturn(Optional.empty());
+    when(employeeRepository.findBy(any(EmployeeId.class))).thenReturn(Optional.empty());
     when(departmentRepository.findBy(any(DepartmentId.class)))
         .thenReturn(Optional.of(mock(Department.class)));
     when(jobTitleRepository.findBy(any(JobTitleId.class)))
         .thenReturn(Optional.of(mock(JobTitle.class)));
-    when(userRepository.findTopByOrderByEmployeeNumberDesc())
+    when(employeeRepository.findTopByOrderByEmployeeNumberDesc())
         .thenReturn(Optional.of(mock(Employee.class)));
 
     commandHandler.doHandle(command);
 
-    verify(userRepository, times(1)).findTopByOrderByEmployeeNumberDesc();
+    verify(employeeRepository, times(1)).findTopByOrderByEmployeeNumberDesc();
   }
 }

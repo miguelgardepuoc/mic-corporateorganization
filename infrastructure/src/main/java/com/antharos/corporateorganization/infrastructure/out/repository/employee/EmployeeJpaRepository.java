@@ -1,5 +1,6 @@
 package com.antharos.corporateorganization.infrastructure.out.repository.employee;
 
+import com.antharos.corporateorganization.domain.employee.Status;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,4 +16,6 @@ public interface EmployeeJpaRepository extends JpaRepository<EmployeeEntity, UUI
   Optional<EmployeeEntity> findTopByOrderByEmployeeNumberDesc();
 
   List<EmployeeEntity> findByDepartmentId(UUID departmentId);
+
+  boolean existsByDepartment_IdAndStatus(UUID departmentId, Status status);
 }

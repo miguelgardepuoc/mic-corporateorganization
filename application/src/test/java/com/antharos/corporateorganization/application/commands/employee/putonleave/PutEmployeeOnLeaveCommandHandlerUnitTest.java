@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeNotFoundException;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Test;
 
 class PutEmployeeOnLeaveCommandHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private EventProducer eventProducer;
   private PutEmployeeOnLeaveCommandHandler handler;
 
   @BeforeEach
   void setUp() {
-    userRepository = mock(UserRepository.class);
+    employeeRepository = mock(EmployeeRepository.class);
     eventProducer = mock(EventProducer.class);
-    handler = new PutEmployeeOnLeaveCommandHandler(userRepository, eventProducer);
+    handler = new PutEmployeeOnLeaveCommandHandler(employeeRepository, eventProducer);
   }
 
   @Test
@@ -31,12 +31,12 @@ class PutEmployeeOnLeaveCommandHandlerUnitTest {
     String employeeId = UUID.randomUUID().toString();
     PutEmployeeOnLeaveCommand command = new PutEmployeeOnLeaveCommand(employeeId, "admin");
 
-    when(userRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.empty());
+    when(employeeRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.empty());
 
     assertThrows(EmployeeNotFoundException.class, () -> handler.doHandle(command));
 
-    verify(userRepository, times(1)).findBy(EmployeeId.of(employeeId));
-    verifyNoMoreInteractions(userRepository);
+    verify(employeeRepository, times(1)).findBy(EmployeeId.of(employeeId));
+    verifyNoMoreInteractions(employeeRepository);
     verifyNoInteractions(eventProducer);
   }
 
@@ -47,12 +47,12 @@ class PutEmployeeOnLeaveCommandHandlerUnitTest {
     PutEmployeeOnLeaveCommand command = new PutEmployeeOnLeaveCommand(employeeId, admin);
 
     Employee employee = mock(Employee.class);
-    when(userRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.of(employee));
+    when(employeeRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.of(employee));
 
     handler.doHandle(command);
 
     verify(employee, times(1)).putOnLeave(admin);
-    verify(userRepository, times(1)).save(employee);
+    verify(employeeRepository, times(1)).save(employee);
     verify(eventProducer, times(1)).sendEmployeePutOnLeaveEvent(employee);
   }
 }

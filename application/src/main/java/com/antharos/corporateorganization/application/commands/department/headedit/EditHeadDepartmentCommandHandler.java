@@ -6,7 +6,7 @@ import com.antharos.corporateorganization.domain.department.DepartmentRepository
 import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.exception.UsernameNotFoundException;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class EditHeadDepartmentCommandHandler {
 
   private final DepartmentRepository departmentRepository;
-  private final UserRepository userRepository;
+  private final EmployeeRepository employeeRepository;
 
   public void handle(EditHeadDepartmentCommand command) {
     final DepartmentId departmentId = DepartmentId.of(command.getId());
@@ -26,12 +26,12 @@ public class EditHeadDepartmentCommandHandler {
             .orElseThrow(() -> new DepartmentNotFoundException(command.getId()));
 
     final Employee employee =
-        this.userRepository
+        this.employeeRepository
             .findByUsername(command.getUsername())
             .orElseThrow(() -> new UsernameNotFoundException(command.getId()));
 
-    department.updateDepartmentHead(employee, command.getCreatedBy(), this.userRepository);
+    department.updateDepartmentHead(employee, command.getCreatedBy(), this.employeeRepository);
     this.departmentRepository.save(department);
-    this.userRepository.save(employee);
+    this.employeeRepository.save(employee);
   }
 }

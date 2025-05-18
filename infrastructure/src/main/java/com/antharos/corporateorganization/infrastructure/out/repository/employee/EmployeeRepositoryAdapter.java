@@ -2,7 +2,8 @@ package com.antharos.corporateorganization.infrastructure.out.repository.employe
 
 import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.employee.Employee;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.Status;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import com.antharos.corporateorganization.infrastructure.out.repository.department.DepartmentEntityMapper;
 import com.antharos.corporateorganization.infrastructure.out.repository.jobtitle.JobTitleEntityMapper;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class EmployeeRepositoryAdapter implements UserRepository {
+public class EmployeeRepositoryAdapter implements EmployeeRepository {
 
   private final EmployeeJpaRepository employeeJpaRepository;
   private final EmployeeEntityMapper mapper;
@@ -63,6 +64,12 @@ public class EmployeeRepositoryAdapter implements UserRepository {
         .stream()
         .map(this.mapper::toDomain)
         .toList();
+  }
+
+  @Override
+  public boolean hasActiveEmployeesByDepartmentId(DepartmentId departmentId) {
+    return this.employeeJpaRepository.existsByDepartment_IdAndStatus(
+        UUID.fromString(departmentId.getValueAsString()), Status.ACTIVE);
   }
 
   @Override

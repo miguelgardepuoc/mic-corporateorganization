@@ -9,6 +9,7 @@ import com.antharos.corporateorganization.application.commands.department.headed
 import com.antharos.corporateorganization.application.commands.department.rename.RenameDepartmentCommand;
 import com.antharos.corporateorganization.application.commands.department.rename.RenameDepartmentCommandHandler;
 import com.antharos.corporateorganization.application.queries.department.FindDepartmentsQueryHandler;
+import com.antharos.corporateorganization.domain.globalexceptions.NotFoundException;
 import com.antharos.corporateorganization.infrastructure.in.dto.department.*;
 import com.antharos.corporateorganization.infrastructure.in.util.AuditorUtils;
 import com.antharos.corporateorganization.infrastructure.security.ManagementOnly;
@@ -127,7 +128,7 @@ public class DepartmentController {
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Head updated successfully"),
-        @ApiResponse(responseCode = "404", description = "Department not found"),
+        @ApiResponse(responseCode = "404", description = "Department or username not found"),
         @ApiResponse(responseCode = "403", description = "Forbidden")
       })
   public ResponseEntity<Void> updateDepartmentHead(
@@ -140,7 +141,11 @@ public class DepartmentController {
             .username(request.username())
             .build();
 
-    this.editHeadDepartmentCommandHandler.handle(command);
+    try {
+      this.editHeadDepartmentCommandHandler.handle(command);
+    } catch (final NotFoundException ex) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

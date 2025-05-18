@@ -6,8 +6,8 @@ import com.antharos.corporateorganization.domain.department.DepartmentRepository
 import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeAlreadyExists;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitleId;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class HireEmployeeCommandHandler {
 
-  private final UserRepository userRepository;
+  private final EmployeeRepository employeeRepository;
 
   private final DepartmentRepository departmentRepository;
 
@@ -31,7 +31,7 @@ public class HireEmployeeCommandHandler {
   public void doHandle(final HireEmployeeCommand command) {
     final EmployeeId employeeId = EmployeeId.of(command.getUserId());
 
-    this.userRepository
+    this.employeeRepository
         .findBy(employeeId)
         .ifPresent(
             existing -> {
@@ -53,7 +53,7 @@ public class HireEmployeeCommandHandler {
             .orElseThrow(() -> new JobTitleNotFoundException(command.getJobTitleId()));
 
     final Long lastEmployeeNumber =
-        this.userRepository
+        this.employeeRepository
             .findTopByOrderByEmployeeNumberDesc()
             .map(Employee::getEmployeeNumber)
             .orElse(0L);
@@ -79,9 +79,9 @@ public class HireEmployeeCommandHandler {
             command.getRole(),
             jobTitle,
             command.getCreatedBy(),
-            this.userRepository);
+            this.employeeRepository);
 
-    this.userRepository.save(employee);
+    this.employeeRepository.save(employee);
     this.eventProducer.sendEmployeeHiredEvent(employee);
   }
 }

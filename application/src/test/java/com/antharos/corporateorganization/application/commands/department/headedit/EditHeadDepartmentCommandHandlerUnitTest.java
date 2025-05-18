@@ -7,7 +7,7 @@ import com.antharos.corporateorganization.domain.department.*;
 import com.antharos.corporateorganization.domain.department.exception.DepartmentNotFoundException;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.exception.UsernameNotFoundException;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,14 +16,14 @@ import org.junit.jupiter.api.Test;
 class EditHeadDepartmentCommandHandlerUnitTest {
 
   private DepartmentRepository departmentRepository;
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private EditHeadDepartmentCommandHandler handler;
 
   @BeforeEach
   void setUp() {
     departmentRepository = mock(DepartmentRepository.class);
-    userRepository = mock(UserRepository.class);
-    handler = new EditHeadDepartmentCommandHandler(departmentRepository, userRepository);
+    employeeRepository = mock(EmployeeRepository.class);
+    handler = new EditHeadDepartmentCommandHandler(departmentRepository, employeeRepository);
   }
 
   @Test
@@ -37,7 +37,7 @@ class EditHeadDepartmentCommandHandlerUnitTest {
     assertThrows(DepartmentNotFoundException.class, () -> handler.handle(command));
 
     verify(departmentRepository, times(1)).findBy(DepartmentId.of(deptId));
-    verifyNoInteractions(userRepository);
+    verifyNoInteractions(employeeRepository);
   }
 
   @Test
@@ -49,12 +49,12 @@ class EditHeadDepartmentCommandHandlerUnitTest {
     Department mockDepartment = mock(Department.class);
     when(departmentRepository.findBy(DepartmentId.of(deptId)))
         .thenReturn(Optional.of(mockDepartment));
-    when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+    when(employeeRepository.findByUsername(username)).thenReturn(Optional.empty());
 
     assertThrows(UsernameNotFoundException.class, () -> handler.handle(command));
 
     verify(departmentRepository, times(1)).findBy(DepartmentId.of(deptId));
-    verify(userRepository, times(1)).findByUsername(username);
+    verify(employeeRepository, times(1)).findByUsername(username);
     verifyNoMoreInteractions(departmentRepository);
   }
 
@@ -71,12 +71,12 @@ class EditHeadDepartmentCommandHandlerUnitTest {
 
     when(departmentRepository.findBy(DepartmentId.of(deptId)))
         .thenReturn(Optional.of(mockDepartment));
-    when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockEmployee));
+    when(employeeRepository.findByUsername(username)).thenReturn(Optional.of(mockEmployee));
 
     handler.handle(command);
 
-    verify(mockDepartment, times(1)).updateDepartmentHead(mockEmployee, admin, userRepository);
+    verify(mockDepartment, times(1)).updateDepartmentHead(mockEmployee, admin, employeeRepository);
     verify(departmentRepository, times(1)).save(mockDepartment);
-    verify(userRepository, times(1)).save(mockEmployee);
+    verify(employeeRepository, times(1)).save(mockEmployee);
   }
 }

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import com.antharos.corporateorganization.domain.employee.Employee;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 
 class FindEmployeeByUsernameQueryHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private FindEmployeeByUsernameQueryHandler queryHandler;
 
   @BeforeEach
   void setUp() {
-    this.userRepository = mock(UserRepository.class);
-    this.queryHandler = new FindEmployeeByUsernameQueryHandler(this.userRepository);
+    this.employeeRepository = mock(EmployeeRepository.class);
+    this.queryHandler = new FindEmployeeByUsernameQueryHandler(this.employeeRepository);
   }
 
   @Test
@@ -28,12 +28,12 @@ class FindEmployeeByUsernameQueryHandlerUnitTest {
     Employee mockEmployee = new Employee(EmployeeId.of(UUID.randomUUID().toString()));
     FindEmployeeByUsernameQuery query = new FindEmployeeByUsernameQuery(username);
 
-    when(this.userRepository.findByUsername(username)).thenReturn(Optional.of(mockEmployee));
+    when(this.employeeRepository.findByUsername(username)).thenReturn(Optional.of(mockEmployee));
 
     Optional<Employee> result = this.queryHandler.handle(query);
 
     assertEquals(Optional.of(mockEmployee), result);
-    verify(this.userRepository, times(1)).findByUsername(username);
+    verify(this.employeeRepository, times(1)).findByUsername(username);
   }
 
   @Test
@@ -41,11 +41,11 @@ class FindEmployeeByUsernameQueryHandlerUnitTest {
     String username = "nonExistentUser";
     FindEmployeeByUsernameQuery query = new FindEmployeeByUsernameQuery(username);
 
-    when(this.userRepository.findByUsername(username)).thenReturn(Optional.empty());
+    when(this.employeeRepository.findByUsername(username)).thenReturn(Optional.empty());
 
     Optional<Employee> result = this.queryHandler.handle(query);
 
     assertEquals(Optional.empty(), result);
-    verify(this.userRepository, times(1)).findByUsername(username);
+    verify(this.employeeRepository, times(1)).findByUsername(username);
   }
 }

@@ -9,8 +9,8 @@ import com.antharos.corporateorganization.domain.employee.event.EmployeeHiredEve
 import com.antharos.corporateorganization.domain.employee.event.EmployeeMarkedAsInactiveEvent;
 import com.antharos.corporateorganization.domain.employee.event.EmployeeOnLeaveEvent;
 import com.antharos.corporateorganization.domain.employee.event.EmployeeTerminatedEvent;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import com.antharos.corporateorganization.domain.jobtitle.JobTitle;
@@ -118,7 +118,7 @@ public class Employee extends AggregateRoot {
       Role role,
       JobTitle jobTitle,
       String createdBy,
-      UserRepository userRepository) {
+      EmployeeRepository employeeRepository) {
 
     Employee u =
         new Employee(
@@ -142,7 +142,7 @@ public class Employee extends AggregateRoot {
             null,
             null);
 
-    u.username = u.generateUsername(userRepository);
+    u.username = u.generateUsername(employeeRepository);
     u.corporateEmail = u.username + "@antharos.com";
     u.status = Status.ACTIVE;
     u.addDomainEvent(new EmployeeHiredEvent(u));
@@ -150,12 +150,12 @@ public class Employee extends AggregateRoot {
     return u;
   }
 
-  private String generateUsername(UserRepository userRepository) {
+  private String generateUsername(EmployeeRepository employeeRepository) {
     String nameInitial = this.name.value().trim().replaceAll("\\s+", "").substring(0, 1);
     String cleanSurname = this.surname.value().trim().replaceAll("\\s+", "");
     String baseUsername = (nameInitial + cleanSurname).toLowerCase();
 
-    if (userRepository.usernameExists(baseUsername)) {
+    if (employeeRepository.usernameExists(baseUsername)) {
       Random random = new Random();
       baseUsername = baseUsername + random.nextInt(10000);
     }

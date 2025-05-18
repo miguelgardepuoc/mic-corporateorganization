@@ -8,7 +8,7 @@ import com.antharos.corporateorganization.domain.department.Department;
 import com.antharos.corporateorganization.domain.department.DepartmentId;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.exception.UsernameNotFoundException;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.*;
 import java.util.Arrays;
 import java.util.List;
@@ -19,13 +19,13 @@ import org.junit.jupiter.api.Test;
 
 class FindEmployeesQueryHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private FindEmployeesQueryHandler queryHandler;
 
   @BeforeEach
   void setUp() {
-    this.userRepository = mock(UserRepository.class);
-    this.queryHandler = new FindEmployeesQueryHandler(this.userRepository);
+    this.employeeRepository = mock(EmployeeRepository.class);
+    this.queryHandler = new FindEmployeesQueryHandler(this.employeeRepository);
   }
 
   @Test
@@ -43,15 +43,15 @@ class FindEmployeesQueryHandlerUnitTest {
 
     FindEmployeesQuery query = new FindEmployeesQuery(username);
 
-    when(this.userRepository.findByUsername(username)).thenReturn(Optional.of(departmentHead));
-    when(this.userRepository.findByDepartmentId(departmentId))
+    when(this.employeeRepository.findByUsername(username)).thenReturn(Optional.of(departmentHead));
+    when(this.employeeRepository.findByDepartmentId(departmentId))
         .thenReturn(Arrays.asList(mockEmployee1, mockEmployee2));
 
     List<Employee> result = this.queryHandler.handle(query);
 
     assertEquals(2, result.size());
-    verify(this.userRepository, times(1)).findByUsername(username);
-    verify(this.userRepository, times(1)).findByDepartmentId(departmentId);
+    verify(this.employeeRepository, times(1)).findByUsername(username);
+    verify(this.employeeRepository, times(1)).findByDepartmentId(departmentId);
   }
 
   @Test
@@ -63,14 +63,15 @@ class FindEmployeesQueryHandlerUnitTest {
 
     FindEmployeesQuery query = new FindEmployeesQuery(username);
 
-    when(this.userRepository.findByUsername(username)).thenReturn(Optional.of(nonDepartmentHead));
-    when(this.userRepository.findAll()).thenReturn(Arrays.asList(mockEmployee1, mockEmployee2));
+    when(this.employeeRepository.findByUsername(username))
+        .thenReturn(Optional.of(nonDepartmentHead));
+    when(this.employeeRepository.findAll()).thenReturn(Arrays.asList(mockEmployee1, mockEmployee2));
 
     List<Employee> result = this.queryHandler.handle(query);
 
     assertEquals(2, result.size());
-    verify(this.userRepository, times(1)).findByUsername(username);
-    verify(this.userRepository, times(1)).findAll();
+    verify(this.employeeRepository, times(1)).findByUsername(username);
+    verify(this.employeeRepository, times(1)).findAll();
   }
 
   @Test
@@ -78,10 +79,10 @@ class FindEmployeesQueryHandlerUnitTest {
     String username = "nonExistentUser";
     FindEmployeesQuery query = new FindEmployeesQuery(username);
 
-    when(this.userRepository.findByUsername(username)).thenReturn(Optional.empty());
+    when(this.employeeRepository.findByUsername(username)).thenReturn(Optional.empty());
 
     assertThrows(UsernameNotFoundException.class, () -> this.queryHandler.handle(query));
 
-    verify(this.userRepository, times(1)).findByUsername(username);
+    verify(this.employeeRepository, times(1)).findByUsername(username);
   }
 }

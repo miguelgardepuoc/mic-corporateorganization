@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeNotFoundException;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Test;
 
 class TerminateEmployeeCommandHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private EventProducer eventProducer;
   private TerminateEmployeeCommandHandler handler;
 
   @BeforeEach
   void setUp() {
-    userRepository = mock(UserRepository.class);
+    employeeRepository = mock(EmployeeRepository.class);
     eventProducer = mock(EventProducer.class);
-    handler = new TerminateEmployeeCommandHandler(userRepository, eventProducer);
+    handler = new TerminateEmployeeCommandHandler(employeeRepository, eventProducer);
   }
 
   @Test
@@ -31,12 +31,12 @@ class TerminateEmployeeCommandHandlerUnitTest {
     String employeeId = UUID.randomUUID().toString();
     TerminateEmployeeCommand command = new TerminateEmployeeCommand(employeeId, "admin");
 
-    when(userRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.empty());
+    when(employeeRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.empty());
 
     assertThrows(EmployeeNotFoundException.class, () -> handler.doHandle(command));
 
-    verify(userRepository, times(1)).findBy(EmployeeId.of(employeeId));
-    verifyNoMoreInteractions(userRepository);
+    verify(employeeRepository, times(1)).findBy(EmployeeId.of(employeeId));
+    verifyNoMoreInteractions(employeeRepository);
     verifyNoInteractions(eventProducer);
   }
 
@@ -47,12 +47,12 @@ class TerminateEmployeeCommandHandlerUnitTest {
     TerminateEmployeeCommand command = new TerminateEmployeeCommand(employeeId, admin);
 
     Employee employee = mock(Employee.class);
-    when(userRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.of(employee));
+    when(employeeRepository.findBy(EmployeeId.of(employeeId))).thenReturn(Optional.of(employee));
 
     handler.doHandle(command);
 
     verify(employee, times(1)).terminate(admin);
-    verify(userRepository, times(1)).save(employee);
+    verify(employeeRepository, times(1)).save(employee);
     verify(eventProducer, times(1)).sendEmployeeTerminatedEvent(employee);
   }
 }

@@ -6,8 +6,8 @@ import static org.mockito.Mockito.*;
 import com.antharos.corporateorganization.domain.employee.*;
 import com.antharos.corporateorganization.domain.employee.event.EmployeeMarkedAsInactiveEvent;
 import com.antharos.corporateorganization.domain.employee.exception.EmployeeNotFoundException;
+import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
-import com.antharos.corporateorganization.domain.employee.repository.UserRepository;
 import com.antharos.corporateorganization.domain.employee.valueobject.EmployeeId;
 import java.util.Collections;
 import java.util.List;
@@ -18,15 +18,16 @@ import org.junit.jupiter.api.Test;
 
 class MarkEmployeeAsInactiveCommandHandlerUnitTest {
 
-  private UserRepository userRepository;
+  private EmployeeRepository employeeRepository;
   private EventProducer eventProducer;
   private MarkEmployeeAsInactiveCommandHandler commandHandler;
 
   @BeforeEach
   void setUp() {
-    this.userRepository = mock(UserRepository.class);
+    this.employeeRepository = mock(EmployeeRepository.class);
     this.eventProducer = mock(EventProducer.class);
-    this.commandHandler = new MarkEmployeeAsInactiveCommandHandler(userRepository, eventProducer);
+    this.commandHandler =
+        new MarkEmployeeAsInactiveCommandHandler(employeeRepository, eventProducer);
   }
 
   @Test
@@ -34,12 +35,12 @@ class MarkEmployeeAsInactiveCommandHandlerUnitTest {
     String userId = UUID.randomUUID().toString();
     MarkEmployeeAsInactiveCommand command = new MarkEmployeeAsInactiveCommand(userId, "admin");
 
-    when(userRepository.findBy(EmployeeId.of(userId))).thenReturn(Optional.empty());
+    when(employeeRepository.findBy(EmployeeId.of(userId))).thenReturn(Optional.empty());
 
     assertThrows(EmployeeNotFoundException.class, () -> commandHandler.doHandle(command));
 
-    verify(userRepository, times(1)).findBy(EmployeeId.of(userId));
-    verifyNoMoreInteractions(userRepository);
+    verify(employeeRepository, times(1)).findBy(EmployeeId.of(userId));
+    verifyNoMoreInteractions(employeeRepository);
     verifyNoInteractions(eventProducer);
   }
 
@@ -54,13 +55,13 @@ class MarkEmployeeAsInactiveCommandHandlerUnitTest {
     Employee employee = mock(Employee.class);
     EmployeeMarkedAsInactiveEvent event = new EmployeeMarkedAsInactiveEvent(employee);
 
-    when(userRepository.findBy(employeeId)).thenReturn(Optional.of(employee));
+    when(employeeRepository.findBy(employeeId)).thenReturn(Optional.of(employee));
     when(employee.getDomainEvents()).thenReturn(List.of(event));
 
     commandHandler.doHandle(command);
 
     verify(employee, times(1)).markAsInactive(adminUser, eventProducer);
-    verify(userRepository, times(1)).save(employee);
+    verify(employeeRepository, times(1)).save(employee);
 
     verify(eventProducer, times(1)).sendEmployeeMarkedAsInactiveEvent(employee);
 
@@ -77,13 +78,13 @@ class MarkEmployeeAsInactiveCommandHandlerUnitTest {
 
     Employee employee = mock(Employee.class);
 
-    when(userRepository.findBy(employeeId)).thenReturn(Optional.of(employee));
+    when(employeeRepository.findBy(employeeId)).thenReturn(Optional.of(employee));
     when(employee.getDomainEvents()).thenReturn(Collections.emptyList());
 
     commandHandler.doHandle(command);
 
     verify(employee, times(1)).markAsInactive(adminUser, eventProducer);
-    verify(userRepository, times(1)).save(employee);
+    verify(employeeRepository, times(1)).save(employee);
     verify(employee, times(1)).getDomainEvents();
     verify(employee, times(1)).clearDomainEvents();
 
