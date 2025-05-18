@@ -15,7 +15,7 @@ spring:
       appconfiguration:
         enabled: true
         stores:
-          - connection-string: ${AZURE_APPCONFIG_CONNECTION_STRING}
+          - connection-string: Endpoint=https://antharos.azconfig.io;Id=AKFK;Secret=534mY24MYAT0bp1qkt9IzuG2UzG4uKAt3m1jnWJIaUBk7gsd8O0HJQQJ99BEACR0EKYq1LXGAAACAZAC24W6
   datasource:
     url: jdbc:postgresql://localhost:55432/CORPORATE_ORGANIZATION
     username: myuser
