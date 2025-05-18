@@ -19,7 +19,7 @@ spring:
   datasource:
     url: jdbc:postgresql://corporateorganization.postgres.database.azure.com:5432/corporate_organization
     username: antharosadmin
-    password: @passw0rd
+    password: "@passw0rd"
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -47,7 +47,7 @@ producer:
     host: antharos.servicebus.windows.net
     port: 6616
     user: RootManageSharedAccessKey
-    password: /wMNU/hS3WDsPAxtZiJs9oiA8aqRaElaY+ASbL0sHC0=
+    password: "/wMNU/hS3WDsPAxtZiJs9oiA8aqRaElaY+ASbL0sHC0="
   topic:
     name: corporate-organization
 
