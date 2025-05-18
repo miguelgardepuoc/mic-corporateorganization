@@ -13,7 +13,9 @@ spring:
   cloud:
     azure:
       appconfiguration:
-        enabled: false
+        enabled: true
+        stores:
+          - connection-string: ${AZURE_APPCONFIG_CONNECTION_STRING}
   datasource:
     url: jdbc:postgresql://localhost:55432/CORPORATE_ORGANIZATION
     username: myuser
