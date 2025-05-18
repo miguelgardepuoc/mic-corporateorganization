@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    azure:
+      appconfiguration:
+        enabled: true
+        stores:
+         - connection-string: ${AZURE_APPCONFIG_CONNECTION_STRING}

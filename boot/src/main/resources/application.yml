@@ -10,6 +10,10 @@ spring:
   mvc:
     servlet:
       path: /corporate-organization
+  cloud:
+    azure:
+      appconfiguration:
+        enabled: false
   datasource:
     url: jdbc:postgresql://localhost:55432/CORPORATE_ORGANIZATION
     username: myuser
