@@ -1,7 +1,10 @@
 spring:
-  cloud:
-    azure:
-      appconfiguration:
-        enabled: true
-        stores:
-         - connection-string: ${AZURE_APPCONFIG_CONNECTION_STRING}
+  datasource:
+    url: jdbc:postgresql://corporateorganization.postgres.database.azure.com:5432/postgres
+producer:
+  event:
+    host: antharos.servicebus.windows.net
+    port: 6616
+    user: RootManageSharedAccessKey
+  topic:
+    name: corporate-organization
