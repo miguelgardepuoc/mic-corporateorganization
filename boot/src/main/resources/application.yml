@@ -10,16 +10,10 @@ spring:
   mvc:
     servlet:
       path: /corporate-organization
-  cloud:
-    azure:
-      appconfiguration:
-        enabled: true
-        stores:
-          - connection-string: Endpoint=https://antharos.azconfig.io;Id=AKFK;Secret=534mY24MYAT0bp1qkt9IzuG2UzG4uKAt3m1jnWJIaUBk7gsd8O0HJQQJ99BEACR0EKYq1LXGAAACAZAC24W6
   datasource:
-    url: jdbc:postgresql://corporateorganization.postgres.database.azure.com:5432/postgres
-    username: antharosadmin
-    password: "@passw0rd"
+    url: jdbc:postgresql://localhost:55432/CORPORATE_ORGANIZATION
+    username: myuser
+    password: mypassword
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -44,12 +38,12 @@ spring:
     password: ${SPRING_JMS_PASSWORD}
 producer:
   event:
-    host: antharos.servicebus.windows.net
-    port: 6616
-    user: RootManageSharedAccessKey
-    password: "/wMNU/hS3WDsPAxtZiJs9oiA8aqRaElaY+ASbL0sHC0="
+    host: ${PRODUCER_ARTEMIS_HOST:localhost}
+    port: ${PRODUCER_ARTEMIS_PORT:6616}
+    user: ${PRODUCER_ARTEMIS_USER:admin}
+    password: ${PRODUCER_ARTEMIS_PASSWORD:admin}
   topic:
-    name: corporate-organization
+    name: ${PRODUCER_TOPIC_NAME:corporate-organization.employee}
 
 security:
   jwt:
