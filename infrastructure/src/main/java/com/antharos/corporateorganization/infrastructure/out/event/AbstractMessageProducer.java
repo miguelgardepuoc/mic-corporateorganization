@@ -1,55 +1,23 @@
 package com.antharos.corporateorganization.infrastructure.out.event;
 
 import static com.antharos.corporateorganization.infrastructure.out.event.model.EventNames.*;
+import static com.antharos.corporateorganization.infrastructure.out.event.model.EventNames.EMPLOYEE_MARKED_AS_INACTIVE;
 
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.EventProducer;
 import com.antharos.corporateorganization.infrastructure.out.event.model.BaseEvent;
 import com.antharos.corporateorganization.infrastructure.out.event.model.EmployeePayload;
 import com.antharos.corporateorganization.infrastructure.out.event.model.EmployeePayloadMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.jms.ConnectionFactory;
-import jakarta.jms.JMSContext;
-import jakarta.jms.Topic;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
-@Slf4j
-public class EventProducerImpl implements EventProducer {
+public abstract class AbstractMessageProducer implements EventProducer {
 
-  private final ConnectionFactory producerConnectionFactory;
-  private final ObjectMapper objectMapper;
   private static final String EMPLOYEE_AGGREGATE = "Employee";
   private final EmployeePayloadMapper mapper;
 
-  @Value("${producer.topic.name}")
-  private String topicName;
-
-  public EventProducerImpl(
-      ConnectionFactory producerConnectionFactory,
-      ObjectMapper objectMapper,
-      EmployeePayloadMapper mapper) {
-    this.producerConnectionFactory = producerConnectionFactory;
-    this.objectMapper = objectMapper;
+  public AbstractMessageProducer(EmployeePayloadMapper mapper) {
     this.mapper = mapper;
-  }
-
-  public void sendMessage(final BaseEvent<EmployeePayload> event) {
-    try (JMSContext context = this.producerConnectionFactory.createContext()) {
-      final Topic topic = context.createTopic(this.topicName);
-
-      final String messageJson = this.objectMapper.writeValueAsString(event);
-
-      context.createProducer().send(topic, messageJson);
-
-      log.info("Message sent: {}", messageJson);
-    } catch (Exception e) {
-      log.error("Error sending message: {} ", event, e);
-    }
   }
 
   @Override
@@ -111,4 +79,6 @@ public class EventProducerImpl implements EventProducer {
             this.mapper.toPayload(employee));
     this.sendMessage(event);
   }
+
+  public abstract void sendMessage(BaseEvent<EmployeePayload> event);
 }
