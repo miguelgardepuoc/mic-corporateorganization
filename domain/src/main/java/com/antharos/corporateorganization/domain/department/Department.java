@@ -4,13 +4,13 @@ import static com.antharos.corporateorganization.domain.employee.Role.ROLE_EMPLO
 import static com.antharos.corporateorganization.domain.employee.Status.ACTIVE;
 
 import com.antharos.corporateorganization.domain.department.exception.DepartmentHasActiveEmployeesException;
+import com.antharos.corporateorganization.domain.department.exception.EmployeeOfDifferentDepartmentException;
 import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
 import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.Employee;
 import com.antharos.corporateorganization.domain.employee.repository.EmployeeRepository;
 import com.antharos.corporateorganization.domain.globalexceptions.ConflictException;
 import java.time.LocalDate;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -84,9 +84,8 @@ public class Department {
     if (!ROLE_EMPLOYEE.equals(departmentHead.getRole())) {
       throw new NotEmployeeException();
     }
-    if (this.departmentHead != null) {
-      Optional<Employee> e = employeeRepository.findByUsername(this.departmentHead.getUsername());
-      e.ifPresent(employee -> employee.changeToEmployee(user));
+    if (departmentHead.getDepartment().equals(this)) {
+      throw new EmployeeOfDifferentDepartmentException();
     }
     departmentHead.changeToDepartmentHead(user);
     this.departmentHead = departmentHead;

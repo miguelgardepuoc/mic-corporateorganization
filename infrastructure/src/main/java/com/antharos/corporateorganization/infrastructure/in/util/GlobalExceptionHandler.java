@@ -1,6 +1,7 @@
 package com.antharos.corporateorganization.infrastructure.in.util;
 
 import com.antharos.corporateorganization.domain.department.exception.DepartmentHasActiveEmployeesException;
+import com.antharos.corporateorganization.domain.department.exception.EmployeeOfDifferentDepartmentException;
 import com.antharos.corporateorganization.domain.department.exception.NotActiveUserException;
 import com.antharos.corporateorganization.domain.department.exception.NotEmployeeException;
 import com.antharos.corporateorganization.domain.employee.exception.*;
@@ -79,6 +80,13 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleNotEmployeeException(NotEmployeeException ex) {
     return buildUnprocessableEntityErrorResponse(
         "departmentHead", "USER_IS_NOT_EMPLOYEE", ex.getMessage());
+  }
+
+  @ExceptionHandler(EmployeeOfDifferentDepartmentException.class)
+  public ResponseEntity<ErrorResponse> handleEmployeeOfDifferentDepartment(
+      EmployeeOfDifferentDepartmentException ex) {
+    return buildUnprocessableEntityErrorResponse(
+        "departmentHead", "EMPLOYEE_DIFF_DEPARTMENT", ex.getMessage());
   }
 
   @ExceptionHandler(DepartmentHasActiveEmployeesException.class)
