@@ -73,8 +73,7 @@ public class Department {
     return isActive;
   }
 
-  public void updateDepartmentHead(
-      Employee departmentHead, String user, EmployeeRepository employeeRepository) {
+  public void updateDepartmentHead(Employee departmentHead, String user) {
     if (!isActive()) {
       throw new ConflictException();
     }

@@ -39,7 +39,7 @@ public class DepartmentManagementService {
       employeeRepository.save(previousHead);
     }
 
-    department.updateDepartmentHead(newHead, changedBy, employeeRepository);
+    department.updateDepartmentHead(newHead, changedBy);
     departmentRepository.save(department);
     employeeRepository.save(newHead);
   }
